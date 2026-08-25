@@ -108,7 +108,11 @@ POST /api/recommend
 }
 ```
 
-결과 화면의 "JSON 다운로드" 버튼은 이 응답을 가공 없이 그대로 저장합니다.
+제출용 JSON이 필요하면 API를 직접 호출해 응답을 그대로 저장하면 됩니다.
+
+```bash
+curl -s -X POST http://localhost:3000/api/recommend -H "Content-Type: application/json" -d '{"companion":"가족","themes":["자연·힐링","액티비티"],"detail":"어린 자녀"}' -o recommendations.json
+```
 
 > `images`는 스펙 ⑤("place_name, image_prompt, images를 결합")를 따라 포함했습니다.
 > 스펙의 예시 JSON에는 이 필드가 없으므로, 제출 검증기가 엄격하다면

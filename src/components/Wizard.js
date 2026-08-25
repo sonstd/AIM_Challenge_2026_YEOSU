@@ -66,7 +66,7 @@ function StepHeader({ step, title, hint }) {
         ))}
       </div>
       <p
-        className="text-xs font-bold tracking-wide"
+        className="display text-xs tracking-wide"
         style={{ color: "var(--accent)" }}
       >
         STEP {step} / 3
@@ -75,10 +75,7 @@ function StepHeader({ step, title, hint }) {
         {title}
       </h2>
       {hint && (
-        <p
-          className="mt-2 text-sm font-medium"
-          style={{ color: "var(--muted)" }}
-        >
+        <p className="display mt-2 text-sm" style={{ color: "var(--muted)" }}>
           {hint}
         </p>
       )}
