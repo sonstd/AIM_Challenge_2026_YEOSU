@@ -1,10 +1,11 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Wizard from "@/components/Wizard";
 
 export default function Home() {
   return (
-    <div>
-
+    <div className="min-h-dvh">
+      <main className="mx-auto flex w-full max-w-3xl flex-col px-5 pb-16 pt-8 sm:px-8 sm:pt-12">
+        <Wizard />
+      </main>
     </div>
   );
 }

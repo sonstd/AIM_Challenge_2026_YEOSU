@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+@theme {
+  /* Geist는 한글 글리프가 없으므로 뒤의 시스템 한글 폰트로 자연스럽게 폴백된다. */
+  --font-sans:
+    var(--font-geist-sans), "Pretendard", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+@font-face {
+  font-family: "Ria";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2410-1@1.0/RiaSans-ExtraBold.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NexonMaplestory';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff') format('woff');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/*
+ * 밝은 하늘 톤으로 고정한다. OS가 다크 모드여도 같은 화면을 보여준다.
+ * (다크 모드를 다시 쓰려면 아래 팔레트를 @media (prefers-color-scheme: dark) 블록으로 복제하면 된다.)
+ */
+:root {
+  color-scheme: light;
+
+  /* 여수 바다 톤 — 수면(위)에서 깊은 물(아래)로 내려가는 아쿠아 계열 */
+  --bg: oklch(0.9 0.055 212);
+  --bg-top: oklch(0.96 0.028 202);
+  --bg-deep: oklch(0.85 0.075 216);
+  --surface: oklch(1 0 0);
+  --surface-sunken: oklch(0.97 0.018 228);
+  --border: oklch(0.88 0.035 230);
+  --text: oklch(0.35 0.09 255);
+  /* 흰 카드 위(7.06:1)뿐 아니라 가장 짙은 바다색 위(4.57:1)에서도 AA를 넘는 값 */
+  --muted: oklch(0.46 0.055 250);
+
+  /* 흰 배경 대비 4.86:1 — 작은 강조 텍스트도 WCAG AA를 통과한다. */
+  --accent: oklch(0.54 0.15 240);
+  --accent-strong: oklch(0.48 0.155 240);
+  --accent-soft: oklch(0.955 0.035 235);
+  --accent-contrast: oklch(1 0 0);
+
+  /*
+   * 메인 CTA(주황). 흰 글씨 대비 3.54:1 — 18.66px 이상 굵은 글씨(AA large 3:1) 전용이다.
+   * 작은 글씨 버튼에는 쓰지 말 것. 그 경우 4.5:1을 넘는 --accent 를 쓴다.
+   */
+  --cta: oklch(0.64 0.165 55);
+  --cta-shadow: oklch(0.52 0.155 50);
+  --cta-text: oklch(1 0 0);
+
+  /* 흰색 보조 버튼의 아랫면 색 */
+  --chunk-soft: oklch(0.83 0.04 235);
+
+  --shadow-sm:
+    0 1px 2px oklch(0.45 0.07 250 / 0.06), 0 2px 8px oklch(0.45 0.07 250 / 0.06);
+  --shadow-md:
+    0 2px 6px oklch(0.45 0.07 250 / 0.06), 0 14px 32px oklch(0.45 0.07 250 / 0.12);
+  --shadow-accent: 0 8px 22px -8px oklch(0.54 0.15 240 / 0.55);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * 바다 배경: 수면 그라데이션 + 화면 아래에 겹쳐 흐르는 물결.
+ * 장식 레이어이므로 고정해 두고 클릭을 가로채지 않는다.
+ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    url("/images/waves.svg"),
+    radial-gradient(
+      900px 380px at 50% 6%,
+      oklch(0.99 0.015 200 / 0.75),
+      transparent 70%
+    ),
+    linear-gradient(
+      180deg,
+      var(--bg-top) 0%,
+      var(--bg) 48%,
+      var(--bg-deep) 100%
+    );
+  background-repeat: repeat-x, no-repeat, no-repeat;
+  background-size:
+    1200px 300px,
+    100% 100%,
+    100% 100%;
+  background-position:
+    center bottom,
+    center,
+    center;
+}
+
+/* 이미지처럼 두툼하게 눌리는 입체 버튼. --chunk 로 아랫면 색을 지정한다. */
+.chunky {
+  box-shadow: 0 6px 0 var(--chunk, var(--cta-shadow));
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease,
+    filter 0.15s ease;
+}
+
+.chunky:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--chunk, var(--cta-shadow));
+}
+
+.chunky:disabled {
+  box-shadow: 0 6px 0 var(--border);
+}
+
+@media (hover: hover) {
+  .chunky:hover:not(:disabled) {
+    filter: brightness(1.04);
+  }
+}
+
+/* 라운드 디스플레이 서체 — 인트로 타이틀과 단계 제목에 쓴다. */
+.display {
+  font-family: "Ria", var(--font-sans);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* 결과 카드가 순차적으로 떠오르는 효과. 모션을 줄인 사용자에게는 적용하지 않는다. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 인트로 일러스트가 아주 천천히 떠 있는 느낌. */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-rise {
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-float {
+    animation: none;
+  }
+}

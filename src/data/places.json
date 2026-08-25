@@ -1,0 +1,502 @@
+[
+  {
+    "place_id": "YEOSU_001",
+    "place_name": "오동도",
+    "category": "자연관광,섬,산책,오동도,여수,동백섬,동백꽃,방파제,등대,대나무숲",
+    "preference_tags": "자연·힐링,사진·인생샷,아이와함께",
+    "avoid_tags": "장거리도보",
+    "summary": "방파제 산책로로 육지와 이어진 동백섬. 3천여 그루 동백나무와 등대, 대나무 숲길이 있다.",
+    "embedding_text": "오동도 여수 동백꽃 등대 방파제산책 방파제걷기 동백숲길산책 등대전망대조망 동백열차탑승에좋다.",
+    "evidence_text_1": "방파제 산책로로 육지와 이어진 동백섬. 3천여 그루 동백나무와 등대, 대나무 숲길이 있다.",
+    "evidence_text_2": "한겨울부터 봄까지 붉은 동백이 섬을 물들여 '바다의 꽃섬'이라는 이름값을 한다.",
+    "evidence_text_3": "방파제 걷기, 동백 숲길 산책, 등대 전망대 조망, 동백열차 탑승에 좋다.",
+    "evidence_text_4": "동백꽃 숲길과 하얀 등대, 768m 방파제 진입로가 대표 볼거리다. 동백 개화기(1~3월)가 촬영 적기다.",
+    "evidence_text_5": "겨울·초봄 꽃 여행객, 가벼운 섬 산책을 원하는 가족 여행객에게 특히 맞다.",
+    "image_prompt": "A camellia island in Yeosu, Korea: a long stone breakwater walkway leading to the island, dense red camellia blossoms lining a forest path, a white lighthouse on the cliff, bamboo grove, clear winter daylight, travel photography, wide angle, natural color",
+    "seeds": [
+      1101,
+      1102,
+      1103
+    ],
+    "images": [
+      "/images/places/YEOSU_001_01.png",
+      "/images/places/YEOSU_001_02.png",
+      "/images/places/YEOSU_001_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_002",
+    "place_name": "여수해상케이블카",
+    "category": "체험시설,전망,야간관광,여수해상케이블카,여수,돌산공원,자산공원,크리스탈캐빈,해상케이블카",
+    "preference_tags": "야경,로맨틱·커플,사진·인생샷,아이와함께",
+    "avoid_tags": "고소공포증비추천",
+    "summary": "돌산공원과 자산공원 사이 1.5km 바다를 건너는 국내 최초의 해상 케이블카. 바닥이 투명한 크리스탈 캐빈이 있다.",
+    "embedding_text": "여수해상케이블카 여수 케이블카 오션뷰 야경 케이블카탑승 크리스탈캐빈체험 야간탑승으로여수밤바다감상에좋다.",
+    "evidence_text_1": "돌산공원과 자산공원 사이 1.5km 바다를 건너는 국내 최초의 해상 케이블카. 바닥이 투명한 크리스탈 캐빈이 있다.",
+    "evidence_text_2": "캐빈 아래로 장군도와 바다, 여수 시가지가 펼쳐져 도시와 바다를 한 번에 담는 짜릿함이 있다.",
+    "evidence_text_3": "케이블카 탑승, 크리스탈 캐빈 체험, 야간 탑승으로 여수 밤바다 감상에 좋다.",
+    "evidence_text_4": "바다 위를 가로지르는 캐빈 행렬과 야간의 불빛이 대표 볼거리다. 돌산·자산 양쪽 정류장 어디서든 탑승할 수 있다.",
+    "evidence_text_5": "여수 밤바다를 공중에서 즐기고 싶은 커플, 가족 여행객에게 특히 맞다.",
+    "image_prompt": "A marine cable car crossing the sea between two hilltop parks in Yeosu, Korea, glass-bottomed crystal cabins suspended over blue water, a small island and city skyline below, golden hour, aerial travel photography, crisp detail",
+    "seeds": [
+      1201,
+      1202,
+      1203
+    ],
+    "images": [
+      "/images/places/YEOSU_002_01.png",
+      "/images/places/YEOSU_002_02.png",
+      "/images/places/YEOSU_002_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_003",
+    "place_name": "여수세계박람회장 외관",
+    "category": "도시관광,건축,야간관광,여수세계박람회장,여수,빅오,스카이타워,국제관,엑스포",
+    "preference_tags": "야경,사진·인생샷,아이와함께",
+    "avoid_tags": "주간방문시볼거리제한",
+    "summary": "2012 여수세계박람회가 열린 해안 단지. 빅오(Big-O)와 스카이타워, 국제관 건물군이 남아 있다.",
+    "embedding_text": "여수세계박람회장 외관 여수세계박람회장 여수 엑스포 스카이타워 전시 빅오쇼관람 단지산책 국제관외관촬영에좋다.",
+    "evidence_text_1": "2012 여수세계박람회가 열린 해안 단지. 빅오(Big-O)와 스카이타워, 국제관 건물군이 남아 있다.",
+    "evidence_text_2": "바다를 향해 열린 대형 구조물들이 박람회의 스케일과 미래적인 분위기를 간직하고 있다.",
+    "evidence_text_3": "빅오 쇼 관람, 단지 산책, 스카이타워·국제관 외관 촬영에 좋다.",
+    "evidence_text_4": "원형 구조물 빅오와 사일로를 재활용한 스카이타워가 대표 볼거리다. 야간 빅오 쇼 시간대가 촬영 적기다.",
+    "evidence_text_5": "야간 공연과 바다 산책을 함께 즐기려는 가족·커플에게 특히 맞다.",
+    "image_prompt": "A coastal world expo complex at night in Yeosu, Korea: a huge circular steel structure standing over the water, a tall tower converted from cement silos, illuminated pavilion buildings, reflections on the sea, long exposure night photography",
+    "seeds": [
+      1301,
+      1302,
+      1303
+    ],
+    "images": [
+      "/images/places/YEOSU_003_01.png",
+      "/images/places/YEOSU_003_02.png",
+      "/images/places/YEOSU_003_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_004",
+    "place_name": "아쿠아플라넷 여수 외관",
+    "category": "실내관람,건축,체험시설,아쿠아플라넷여수,여수,아쿠아리움,벨루가,박람회장",
+    "preference_tags": "아이와함께,액티비티,사진·인생샷",
+    "avoid_tags": "",
+    "summary": "박람회장 내 대형 아쿠아리움. 흰돌고래(벨루가) 사육으로 알려진 해양 생물 전시관이다.",
+    "embedding_text": "아쿠아플라넷 여수 외관 아쿠아플라넷여수 여수 아쿠아리움 수족관 가족여행 아쿠아리움관람 건물외관촬영 박람회장단지산책에좋다.",
+    "evidence_text_1": "박람회장 내 대형 아쿠아리움. 흰돌고래(벨루가) 사육으로 알려진 해양 생물 전시관이다.",
+    "evidence_text_2": "물결을 형상화한 곡면 외벽이 바다와 맞닿아 해양 도시의 랜드마크다운 인상을 준다.",
+    "evidence_text_3": "아쿠아리움 관람, 건물 외관 촬영, 박람회장 단지 산책에 좋다.",
+    "evidence_text_4": "파도 곡선의 유리 외벽 건물이 대표 볼거리다. 외관 중심 포인트로 내부 전시는 제외된다.",
+    "evidence_text_5": "아이 동반 가족 여행객, 비 오는 날 실내 일정이 필요한 여행객에게 특히 맞다.",
+    "image_prompt": "A large aquarium building on the Yeosu waterfront, curved wave-shaped glass facade echoing ocean swells, seaside promenade in front, bright overcast daylight, architectural exterior photography, wide angle",
+    "seeds": [
+      1401,
+      1402,
+      1403
+    ],
+    "images": [
+      "/images/places/YEOSU_004_01.png",
+      "/images/places/YEOSU_004_02.png",
+      "/images/places/YEOSU_004_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_005",
+    "place_name": "자산공원",
+    "category": "전망,공원,산책,자산공원,여수,오동도전망,이순신동상,케이블카정류장,한려수도",
+    "preference_tags": "자연·힐링,사진·인생샷",
+    "avoid_tags": "장거리도보",
+    "summary": "오동도를 내려다보는 언덕 위 공원. 해상케이블카 자산 정류장과 이순신 동상, 전망대가 있다.",
+    "embedding_text": "자산공원 여수 이순신동상 참전기념탑 전망 전망대조망 케이블카탑승 오동도와연계한산책에좋다.",
+    "evidence_text_1": "오동도를 내려다보는 언덕 위 공원. 해상케이블카 자산 정류장과 이순신 동상, 전망대가 있다.",
+    "evidence_text_2": "언덕 위에서 오동도와 한려수도가 내려다보여 여수 바다의 첫인상을 시원하게 열어 준다.",
+    "evidence_text_3": "전망대 조망, 케이블카 탑승, 오동도와 연계한 산책에 좋다.",
+    "evidence_text_4": "전망대에서 내려다보는 오동도와 돌산대교 방면 바다 전망이 대표 볼거리다. 케이블카 자산 정류장이 함께 있다.",
+    "evidence_text_5": "오동도·케이블카 일정을 묶는 여행객, 전망 사진을 원하는 사진 애호가에게 특히 맞다.",
+    "image_prompt": "A hilltop park overlooking Yeosu harbor, an observation deck with a view down onto a wooded camellia island and the island-dotted sea, a bronze admiral statue, a cable car station nearby, clear blue sky, travel photography",
+    "seeds": [
+      1501,
+      1502,
+      1503
+    ],
+    "images": [
+      "/images/places/YEOSU_005_01.png",
+      "/images/places/YEOSU_005_02.png",
+      "/images/places/YEOSU_005_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_006",
+    "place_name": "돌산대교",
+    "category": "건축,야간관광,전망,돌산대교,여수,사장교,여수야경,경관조명",
+    "preference_tags": "야경,로맨틱·커플,사진·인생샷",
+    "avoid_tags": "주간방문시볼거리제한",
+    "summary": "여수 시내와 돌산도를 잇는 450m 사장교. 밤이면 조명이 바뀌는 여수 야경의 상징이다.",
+    "embedding_text": "돌산대교 여수 사장교 야경명소 랜드마크 돌산공원 장군도방면에서의야경촬영 다리아래유람선탑승에좋다.",
+    "evidence_text_1": "여수 시내와 돌산도를 잇는 450m 사장교. 밤이면 조명이 바뀌는 여수 야경의 상징이다.",
+    "evidence_text_2": "부챗살 케이블이 조명을 받아 바다 위에 빛의 부채를 펼친 듯한 야경을 만든다.",
+    "evidence_text_3": "돌산공원·장군도 방면에서의 야경 촬영, 다리 아래 유람선 탑승에 좋다.",
+    "evidence_text_4": "사장교 케이블의 야간 경관조명과 수면 반영이 대표 볼거리다. 돌산공원 전망대가 대표 촬영 위치다.",
+    "evidence_text_5": "여수 밤바다 야경 사진을 원하는 사진 애호가, 야경 드라이브 커플에게 특히 맞다.",
+    "image_prompt": "A cable-stayed bridge at night in Yeosu, Korea, fan-shaped cables lit with changing colored floodlights, light trails reflected on the dark sea, city lights behind, long exposure night cityscape photography",
+    "seeds": [
+      1601,
+      1602,
+      1603
+    ],
+    "images": [
+      "/images/places/YEOSU_006_01.png",
+      "/images/places/YEOSU_006_02.png",
+      "/images/places/YEOSU_006_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_007",
+    "place_name": "향일암",
+    "category": "역사문화,종교,전망,향일암,여수,돌산도,금오산,해수관음,일출명소,암자",
+    "preference_tags": "문화·역사,자연·힐링,사진·인생샷",
+    "avoid_tags": "노약자비추천,새벽방문필요",
+    "summary": "돌산도 남쪽 금오산 바위 벼랑에 자리한 해수관음 기도 도량. '해를 향한 암자'라는 이름의 일출 명소다.",
+    "embedding_text": "향일암 여수 일출명소 사찰 금오산 일출감상 바위석문통과체험 남해조망과암자촬영에좋다.",
+    "evidence_text_1": "돌산도 남쪽 금오산 바위 벼랑에 자리한 해수관음 기도 도량. '해를 향한 암자'라는 이름의 일출 명소다.",
+    "evidence_text_2": "바위 틈 석문을 지나 오르면 암자 아래로 남해가 펼쳐져 일출 때 장엄한 감동을 준다.",
+    "evidence_text_3": "일출 감상, 바위 석문 통과 체험, 남해 조망과 암자 촬영에 좋다.",
+    "evidence_text_4": "관음전 아래로 바다가 펼쳐지는 구도와 거북 등껍질 무늬 바위, 일출이 대표 볼거리다.",
+    "evidence_text_5": "새해 일출 여행객, 기도 순례 여행객에게 특히 맞다.",
+    "image_prompt": "A small Korean Buddhist hermitage built on a rocky cliff facing the sea at sunrise, traditional tiled roof hall above the water, a narrow stone gate passage between boulders, turtle-shell patterned rock, golden sunrise over the South Sea, serene atmosphere",
+    "seeds": [
+      1701,
+      1702,
+      1703
+    ],
+    "images": [
+      "/images/places/YEOSU_007_01.png",
+      "/images/places/YEOSU_007_02.png",
+      "/images/places/YEOSU_007_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_008",
+    "place_name": "무술목해변",
+    "category": "자연관광,해변,휴식,무술목해변,여수,돌산도,몽돌해변,이순신전적지,소나무숲",
+    "preference_tags": "자연·힐링,액티비티",
+    "avoid_tags": "백사장물놀이비추천",
+    "summary": "돌산도 동쪽의 몽돌 해변. 이순신 장군의 전적지로 해양수산과학관과 소나무숲이 있다.",
+    "embedding_text": "무술목해변 여수 몽돌해변 일출 돌산도 몽돌해변산책 파도소리감상 소나무숲그늘휴식에좋다.",
+    "evidence_text_1": "돌산도 동쪽의 몽돌 해변. 이순신 장군의 전적지로 해양수산과학관과 소나무숲이 있다.",
+    "evidence_text_2": "파도가 몽돌을 굴리는 소리가 끊이지 않아 귀로 먼저 기억되는 바다다.",
+    "evidence_text_3": "몽돌 해변 산책, 파도 소리 감상, 소나무숲 그늘 휴식에 좋다.",
+    "evidence_text_4": "둥근 몽돌이 깔린 해변과 방풍 소나무숲이 대표 볼거리다. 백사장 해변들과 구분되는 식별 요소다.",
+    "evidence_text_5": "조용한 바다 산책을 원하는 여행객, 파도 소리를 담으려는 여행객에게 특히 맞다.",
+    "image_prompt": "A pebble beach on the Korean coast, rounded dark stones covering the shore, waves rolling the pebbles, a windbreak pine forest along the beach edge, soft morning light, calm natural landscape photography",
+    "seeds": [
+      1801,
+      1802,
+      1803
+    ],
+    "images": [
+      "/images/places/YEOSU_008_01.png",
+      "/images/places/YEOSU_008_02.png",
+      "/images/places/YEOSU_008_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_009",
+    "place_name": "방죽포해수욕장",
+    "category": "자연관광,해변,휴식,방죽포해수욕장,여수,돌산도,백사장,소나무방풍림,노송숲",
+    "preference_tags": "자연·힐링,아이와함께,액티비티",
+    "avoid_tags": "",
+    "summary": "돌산도 동쪽의 아담한 백사장 해수욕장. 300년 된 소나무 방풍림이 백사장을 감싼다.",
+    "embedding_text": "방죽포해수욕장 여수 해수욕장 곰솔숲 가족피서 여름물놀이 솔숲그늘휴식 해변산책에좋다.",
+    "evidence_text_1": "돌산도 동쪽의 아담한 백사장 해수욕장. 300년 된 소나무 방풍림이 백사장을 감싼다.",
+    "evidence_text_2": "만곡진 백사장과 노송숲이 아늑하게 어우러져 가족 단위 물놀이에 알맞은 포근함이 있다.",
+    "evidence_text_3": "여름 물놀이, 솔숲 그늘 휴식, 해변 산책에 좋다.",
+    "evidence_text_4": "노송 방풍림 사이로 보이는 백사장과 잔잔한 만의 풍경이 대표 볼거리다.",
+    "evidence_text_5": "아이 동반 가족 피서객, 한적한 해수욕장을 찾는 여행객에게 특히 맞다.",
+    "image_prompt": "A small curved white sand beach in a sheltered bay, ringed by an old pine windbreak forest, calm shallow water, warm summer afternoon light, peaceful coastal photography",
+    "seeds": [
+      1901,
+      1902,
+      1903
+    ],
+    "images": [
+      "/images/places/YEOSU_009_01.png",
+      "/images/places/YEOSU_009_02.png",
+      "/images/places/YEOSU_009_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_010",
+    "place_name": "돌산공원",
+    "category": "전망,공원,야간관광,돌산공원,여수,돌산대교전망,여수야경,케이블카정류장,장군도",
+    "preference_tags": "야경,로맨틱·커플,사진·인생샷",
+    "avoid_tags": "주간방문시볼거리제한",
+    "summary": "돌산대교 옆 언덕의 공원. 여수 시가지와 돌산대교 야경을 한눈에 담는 전망 명소이자 케이블카 정류장이다.",
+    "embedding_text": "돌산공원 여수 전망 케이블카 야경명소 야경촬영 케이블카탑승 전망데크산책에좋다.",
+    "evidence_text_1": "돌산대교 옆 언덕의 공원. 여수 시가지와 돌산대교 야경을 한눈에 담는 전망 명소이자 케이블카 정류장이다.",
+    "evidence_text_2": "해가 지면 돌산대교와 시가지 불빛이 바다에 어려 여수 밤바다의 대표 화면이 완성된다.",
+    "evidence_text_3": "야경 촬영, 케이블카 탑승, 전망 데크 산책에 좋다.",
+    "evidence_text_4": "전망대에서 보는 돌산대교·장군도·시가지 야경 파노라마가 대표 볼거리다. 여수 야경 사진의 표준 앵글이다.",
+    "evidence_text_5": "야경 사진을 원하는 사진 애호가, 밤바다 데이트를 원하는 커플에게 특히 맞다.",
+    "image_prompt": "A hilltop park observation deck at night overlooking Yeosu city, panoramic view of an illuminated cable-stayed bridge, a small island, and glittering city lights reflected on the sea, long exposure night panorama",
+    "seeds": [
+      2001,
+      2002,
+      2003
+    ],
+    "images": [
+      "/images/places/YEOSU_010_01.png",
+      "/images/places/YEOSU_010_02.png",
+      "/images/places/YEOSU_010_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_011",
+    "place_name": "이순신광장",
+    "category": "역사문화,광장,도시관광,이순신광장,여수,거북선,이순신동상,전라좌수영,구도심",
+    "preference_tags": "문화·역사,아이와함께",
+    "avoid_tags": "",
+    "summary": "여수 구도심 바닷가의 광장. 거북선 실물 모형과 이순신 동상이 있는 전라좌수영의 중심 무대다.",
+    "embedding_text": "이순신광장 여수 거북선 이순신 도심광장 거북선모형관람 광장행사참여 진남관 낭만포차거리와연계한산책에좋다.",
+    "evidence_text_1": "여수 구도심 바닷가의 광장. 거북선 실물 모형과 이순신 동상이 있는 전라좌수영의 중심 무대다.",
+    "evidence_text_2": "동상과 거북선, 바다가 한 축으로 이어져 호국의 도시 여수의 자부심이 느껴진다.",
+    "evidence_text_3": "거북선 모형 관람, 광장 행사 참여, 진남관·낭만포차 거리와 연계한 산책에 좋다.",
+    "evidence_text_4": "거북선 실물 모형과 이순신 장군 동상이 대표 볼거리다. 진남관 아래 구도심 바다와 이어지는 광장이다.",
+    "evidence_text_5": "역사 교육을 겸한 가족 여행객, 구도심 도보 여행객에게 특히 맞다.",
+    "image_prompt": "A seaside civic plaza in the old town of Yeosu, Korea, a full-size replica of a Korean turtle ship warship, a bronze statue of Admiral Yi Sun-sin, harbor water behind, blue sky, wide travel photography",
+    "seeds": [
+      2101,
+      2102,
+      2103
+    ],
+    "images": [
+      "/images/places/YEOSU_011_01.png",
+      "/images/places/YEOSU_011_02.png",
+      "/images/places/YEOSU_011_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_012",
+    "place_name": "여수해양공원",
+    "category": "공원,산책,야간관광,여수해양공원,여수,하멜등대,낭만포차,거북선대교,여수밤바다",
+    "preference_tags": "야경,맛집·미식,로맨틱·커플",
+    "avoid_tags": "주간방문시분위기덜함",
+    "summary": "구도심 해안을 따라 조성된 수변 공원. 하멜등대와 낭만포차 거리로 이어지는 밤바다 산책로다.",
+    "embedding_text": "여수해양공원 여수 빅오 여수밤바다 낭만포차 해안산책 하멜등대 거북선대교야경촬영 낭만포차이용에좋다.",
+    "evidence_text_1": "구도심 해안을 따라 조성된 수변 공원. 하멜등대와 낭만포차 거리로 이어지는 밤바다 산책로다.",
+    "evidence_text_2": "바다 건너 돌산대교 불빛과 포차의 활기가 어우러져 '여수 밤바다' 노래 그대로의 낭만이 흐른다.",
+    "evidence_text_3": "해안 산책, 하멜등대·거북선대교 야경 촬영, 낭만포차 이용에 좋다.",
+    "evidence_text_4": "붉은 하멜등대와 거북선대교 야경이 대표 볼거리다. 종포해양공원 구간과 이어져 하나의 수변 축을 이룬다.",
+    "evidence_text_5": "밤바다 산책과 포차를 즐기려는 커플·친구 단위 여행객에게 특히 맞다.",
+    "image_prompt": "A waterfront park along the old town coast of Yeosu at night, a small red lighthouse, a lit bridge across the bay, a row of glowing night food stalls along the promenade, warm lights reflected on the water, atmospheric night photography",
+    "seeds": [
+      2201,
+      2202,
+      2203
+    ],
+    "images": [
+      "/images/places/YEOSU_012_01.png",
+      "/images/places/YEOSU_012_02.png",
+      "/images/places/YEOSU_012_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_013",
+    "place_name": "종포해양공원",
+    "category": "공원,산책,야간관광,종포해양공원,여수,낭만포차,버스킹,해안데크,여수밤바다",
+    "preference_tags": "야경,맛집·미식,액티비티",
+    "avoid_tags": "주간방문시분위기덜함",
+    "summary": "이순신광장과 여수해양공원 사이의 해안 공원. 낭만포차 거리와 버스킹 무대가 있는 밤바다 명소다.",
+    "embedding_text": "종포해양공원 여수 해안산책 버스킹 여수밤바다 낭만포차먹거리 버스킹관람 해안데크산책에좋다.",
+    "evidence_text_1": "이순신광장과 여수해양공원 사이의 해안 공원. 낭만포차 거리와 버스킹 무대가 있는 밤바다 명소다.",
+    "evidence_text_2": "포차 불빛과 바다, 음악이 뒤섞인 저녁 풍경이 여수 여행의 밤을 대표하는 활기를 준다.",
+    "evidence_text_3": "낭만포차 먹거리, 버스킹 관람, 해안 데크 산책에 좋다.",
+    "evidence_text_4": "해안 데크와 낭만포차 거리, 바다 건너 장군도 야경이 대표 볼거리다. 여수해양공원과 연속 구간이라 구분에 유의한다.",
+    "evidence_text_5": "밤바다 정취와 먹거리를 함께 즐기려는 젊은 여행객에게 특히 맞다.",
+    "image_prompt": "A coastal wooden boardwalk park in Yeosu at night, a street of night food stalls with warm lights, a busker performing on a small stage, crowds strolling, island lights across the dark water, lively night atmosphere",
+    "seeds": [
+      2301,
+      2302,
+      2303
+    ],
+    "images": [
+      "/images/places/YEOSU_013_01.png",
+      "/images/places/YEOSU_013_02.png",
+      "/images/places/YEOSU_013_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_014",
+    "place_name": "고소동 벽화마을",
+    "category": "도시관광,산책,전망,고소동벽화마을,여수,벽화골목,오포대,고소대,1004벽화",
+    "preference_tags": "사진·인생샷,액티비티",
+    "avoid_tags": "노약자비추천",
+    "summary": "진남관 뒤 언덕 골목에 조성된 1004 벽화골목. 오포대와 고소대에서 여수 앞바다가 내려다보인다.",
+    "embedding_text": "고소동 벽화마을 고소동벽화마을 여수 벽화골목 천사벽화 포토존 벽화골목탐방 언덕전망카페이용 진남관과연계한도보여행에좋다.",
+    "evidence_text_1": "진남관 뒤 언덕 골목에 조성된 1004 벽화골목. 오포대와 고소대에서 여수 앞바다가 내려다보인다.",
+    "evidence_text_2": "가파른 골목의 벽화들 사이로 바다와 돌산대교가 내려다보여 걷는 내내 그림과 풍경이 번갈아 나타난다.",
+    "evidence_text_3": "벽화 골목 탐방, 언덕 전망 카페 이용, 진남관과 연계한 도보 여행에 좋다.",
+    "evidence_text_4": "벽화 계단 골목과 골목 끝으로 열리는 바다·돌산대교 전망이 대표 볼거리다.",
+    "evidence_text_5": "골목 산책과 전망 카페를 좋아하는 젊은 여행객에게 특히 맞다.",
+    "image_prompt": "A steep hillside alley mural village in Yeosu, Korea, painted stairways and walls, narrow lanes opening to a view of the sea and a distant bridge, sunny afternoon, colorful street photography",
+    "seeds": [
+      2401,
+      2402,
+      2403
+    ],
+    "images": [
+      "/images/places/YEOSU_014_01.png",
+      "/images/places/YEOSU_014_02.png",
+      "/images/places/YEOSU_014_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_015",
+    "place_name": "진남관",
+    "category": "역사문화,건축,관람,진남관,여수,전라좌수영,국보,객사,목조건축,임진왜란",
+    "preference_tags": "문화·역사",
+    "avoid_tags": "공사기간방문시제한",
+    "summary": "전라좌수영 객사로 국보. 정면 15칸, 현존 최대 규모의 단층 목조 관아 건축이다.",
+    "embedding_text": "진남관 여수 국보 조선수군 객사 관아건축관람 임진왜란역사답사 이순신광장과연계한도보여행에좋다.",
+    "evidence_text_1": "전라좌수영 객사로 국보. 정면 15칸, 현존 최대 규모의 단층 목조 관아 건축이다.",
+    "evidence_text_2": "75칸 대청의 기둥 열이 만드는 장대한 공간감이 좌수영 본영의 위엄을 그대로 전한다.",
+    "evidence_text_3": "관아 건축 관람, 임진왜란 역사 답사, 이순신광장과 연계한 도보 여행에 좋다.",
+    "evidence_text_4": "68개 기둥이 받치는 거대한 팔작지붕과 정면 계단이 대표 볼거리다. 보수 공사 시기에는 가설 덧집이 씌워질 수 있다.",
+    "evidence_text_5": "이순신 유적을 답사하는 역사 여행객에게 특히 맞다.",
+    "image_prompt": "A monumental single-story Korean wooden government hall from the Joseon dynasty, vast hip-and-gable tiled roof supported by dozens of thick wooden columns, broad stone front steps, open hall interior columns receding in rows, overcast daylight, architectural heritage photography",
+    "seeds": [
+      2501,
+      2502,
+      2503
+    ],
+    "images": [
+      "/images/places/YEOSU_015_01.png",
+      "/images/places/YEOSU_015_02.png",
+      "/images/places/YEOSU_015_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_016",
+    "place_name": "금오도 비렁길 대표입구",
+    "category": "자연관광,트레킹,섬,금오도,여수,비렁길,해안절벽,신선대,미역널방,함구미",
+    "preference_tags": "액티비티,자연·힐링,사진·인생샷",
+    "avoid_tags": "노약자비추천,이동시간김",
+    "summary": "금오도 해안 벼랑을 따라 이어지는 트레킹길 '비렁길'의 기점. 여수에서 배로 들어가는 섬 걷기 명소다.",
+    "embedding_text": "금오도 비렁길 대표입구 금오도비렁길 여수 해안절벽 트레킹 출렁다리 비렁길1~5코스트레킹 절벽전망대(신선대 미역널방)조망 섬마을탐방에좋다.",
+    "evidence_text_1": "금오도 해안 벼랑을 따라 이어지는 트레킹길 '비렁길'의 기점. 여수에서 배로 들어가는 섬 걷기 명소다.",
+    "evidence_text_2": "비렁(벼랑)'이라는 이름대로 깎아지른 해안 절벽 위를 걸으며 남해의 쪽빛 바다를 내내 곁에 둔다.",
+    "evidence_text_3": "비렁길 1~5코스 트레킹, 절벽 전망대(신선대·미역널방) 조망, 섬 마을 탐방에 좋다.",
+    "evidence_text_4": "함구미 선착장의 비렁길 입구와 절벽 위 전망 데크가 대표 볼거리다. 코스형이라 대표 입구·전망 지점으로 수렴된다.",
+    "evidence_text_5": "섬 트레킹을 즐기는 활동적인 여행객, 절벽 해안 풍경을 원하는 사진 애호가에게 특히 맞다.",
+    "image_prompt": "A clifftop coastal trekking path on a Korean island, a wooden viewing deck on the edge of a sheer sea cliff, deep blue southern sea below, a small fishing village harbor at the trailhead, clear sunny day, dramatic landscape photography",
+    "seeds": [
+      2601,
+      2602,
+      2603
+    ],
+    "images": [
+      "/images/places/YEOSU_016_01.png",
+      "/images/places/YEOSU_016_02.png",
+      "/images/places/YEOSU_016_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_017",
+    "place_name": "거문도",
+    "category": "자연관광,섬,트레킹,거문도,여수,거문도등대,백도,다도해,동백터널",
+    "preference_tags": "액티비티,자연·힐링,사진·인생샷",
+    "avoid_tags": "이동시간김",
+    "summary": "여수에서 뱃길로 2시간 남짓한 다도해 최남단 섬. 영국군 점거의 역사가 있는 거문도등대와 백도 유람 기점이다.",
+    "embedding_text": "거문도 여수 등대 섬여행 백도 거문도등대트레킹 백도유람선관광 녹산등대산책에좋다.",
+    "evidence_text_1": "여수에서 뱃길로 2시간 남짓한 다도해 최남단 섬. 영국군 점거의 역사가 있는 거문도등대와 백도 유람 기점이다.",
+    "evidence_text_2": "등대로 가는 동백 숲길과 절벽 해안이 먼 섬 특유의 아득하고 극적인 풍경을 준다.",
+    "evidence_text_3": "거문도등대 트레킹, 백도 유람선 관광, 녹산등대 산책에 좋다.",
+    "evidence_text_4": "절벽 끝 거문도등대와 등대로 이어지는 동백 터널 길이 대표 볼거리다. 인근 백도 기암 유람과 묶이는 섬이다.",
+    "evidence_text_5": "먼 섬 여행을 즐기는 트레킹 여행객, 등대 풍경을 원하는 사진 애호가에게 특히 맞다.",
+    "image_prompt": "A remote southern Korean island lighthouse at the end of a cliff, a shaded tunnel path of camellia trees leading toward it, rugged rock coastline and open sea beyond, soft morning haze, atmospheric travel photography",
+    "seeds": [
+      2701,
+      2702,
+      2703
+    ],
+    "images": [
+      "/images/places/YEOSU_017_01.png",
+      "/images/places/YEOSU_017_02.png",
+      "/images/places/YEOSU_017_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_018",
+    "place_name": "사도",
+    "category": "자연관광,섬,체험,사도,여수,공룡발자국화석,모세의기적,추도,바닷길",
+    "preference_tags": "아이와함께,액티비티,자연·힐링",
+    "avoid_tags": "간조시간대만가능",
+    "summary": "공룡 발자국 화석이 남아 있는 작은 섬. 썰물 때 모래톱으로 이웃 추도와 이어지는 '모세의 기적'이 나타난다.",
+    "embedding_text": "사도 여수 공룡화석지 모세의기적 섬여행 공룡발자국화석탐방 바닷길체험 기암해안산책에좋다.",
+    "evidence_text_1": "공룡 발자국 화석이 남아 있는 작은 섬. 썰물 때 모래톱으로 이웃 추도와 이어지는 '모세의 기적'이 나타난다.",
+    "evidence_text_2": "화석 해안과 기암, 물이 갈라지는 바닷길이 어우러져 시간여행 같은 신비로움을 준다.",
+    "evidence_text_3": "공룡 발자국 화석 탐방, 바닷길 체험, 기암 해안 산책에 좋다.",
+    "evidence_text_4": "해안 암반의 공룡 발자국 화석지와 간조 때 드러나는 모래톱 바닷길이 대표 볼거리다.",
+    "evidence_text_5": "아이와 함께 지질 체험을 원하는 가족 여행객에게 특히 맞다.",
+    "image_prompt": "A small Korean island coastline with dinosaur footprint fossils preserved in flat coastal bedrock, strange eroded rock formations, a sandbar path revealed at low tide connecting to a neighbouring island, bright daylight, geological travel photography",
+    "seeds": [
+      2801,
+      2802,
+      2803
+    ],
+    "images": [
+      "/images/places/YEOSU_018_01.png",
+      "/images/places/YEOSU_018_02.png",
+      "/images/places/YEOSU_018_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_019",
+    "place_name": "장도",
+    "category": "예술문화,섬,산책,장도,여수,예울마루,장도전시관,보행교,예술섬",
+    "preference_tags": "문화·역사,자연·힐링,로맨틱·커플",
+    "avoid_tags": "간조시간대만가능",
+    "summary": "웅천 앞바다의 작은 섬을 예술 섬으로 조성한 예울마루 장도. 보행교로 걸어 들어가는 전시·창작 공간이다.",
+    "embedding_text": "장도 여수 예술의섬 보도교 웅천 장도전시관관람 잔디언덕산책 웅천해변과연계한일몰감상에좋다.",
+    "evidence_text_1": "웅천 앞바다의 작은 섬을 예술 섬으로 조성한 예울마루 장도. 보행교로 걸어 들어가는 전시·창작 공간이다.",
+    "evidence_text_2": "물때에 따라 잠기는 보행교를 건너 만나는 잔디 언덕과 전시관이 예술 산책 특유의 여백을 준다.",
+    "evidence_text_3": "장도전시관 관람, 잔디 언덕 산책, 웅천해변과 연계한 일몰 감상에 좋다.",
+    "evidence_text_4": "바다 위로 이어지는 보행교와 섬 위 전시관·조형물이 대표 볼거리다. 예울마루와 함께 여수의 예술 축을 이룬다.",
+    "evidence_text_5": "전시와 바다 산책을 함께 즐기려는 커플·가족 여행객에게 특히 맞다.",
+    "image_prompt": "A small art island off the Yeosu coast, a long pedestrian bridge over the sea leading to it, a grassy hill, a modern exhibition hall and outdoor sculptures, sunset light over the water, calm minimal architectural photography",
+    "seeds": [
+      2901,
+      2902,
+      2903
+    ],
+    "images": [
+      "/images/places/YEOSU_019_01.png",
+      "/images/places/YEOSU_019_02.png",
+      "/images/places/YEOSU_019_03.png"
+    ]
+  },
+  {
+    "place_id": "YEOSU_020",
+    "place_name": "웅천친수공원",
+    "category": "공원,해변,휴식,웅천친수공원,여수,인공해변,요트마리나,웅천지구,잔디밭",
+    "preference_tags": "아이와함께,자연·힐링,액티비티",
+    "avoid_tags": "",
+    "summary": "웅천지구 앞바다의 인공 해변 공원. 잔잔한 내만의 백사장과 잔디밭, 요트 마리나가 있다.",
+    "embedding_text": "웅천친수공원 여수 인공해변 곰솔숲 물놀이 인공해변물놀이 잔디밭피크닉 장도방면일몰촬영에좋다.",
+    "evidence_text_1": "웅천지구 앞바다의 인공 해변 공원. 잔잔한 내만의 백사장과 잔디밭, 요트 마리나가 있다.",
+    "evidence_text_2": "아파트 스카이라인과 인공 백사장이 어우러진 도시형 해변의 세련되고 가족적인 분위기가 있다.",
+    "evidence_text_3": "인공 해변 물놀이, 잔디밭 피크닉, 장도 방면 일몰 촬영에 좋다.",
+    "evidence_text_4": "내만의 잔잔한 인공 백사장과 바다 건너 장도·고흥 방면 일몰이 대표 볼거리다.",
+    "evidence_text_5": "아이와 안전한 물놀이를 원하는 가족, 도심 근접 해변을 찾는 여행객에게 특히 맞다.",
+    "image_prompt": "An urban artificial beach park in Yeosu, calm inner-bay water, clean white sand, a wide lawn for picnics, a yacht marina, modern apartment skyline behind, sunset over the sea, bright family-friendly travel photography",
+    "seeds": [
+      3001,
+      3002,
+      3003
+    ],
+    "images": [
+      "/images/places/YEOSU_020_01.png",
+      "/images/places/YEOSU_020_02.png",
+      "/images/places/YEOSU_020_03.png"
+    ]
+  }
+]
