@@ -16,11 +16,21 @@ export function splitSentences(text) {
     .filter(Boolean);
 }
 
-/** 소수점이 포함된 수치(예: 1.5km). 대회 규칙상 인용 금지 대상이다. */
+/** 소수점이 포함된 수치(예: 1.5km). 마침표가 문장 구분자로 오인된다. */
 const DECIMAL_PATTERN = /\d+\.\d+/;
 
 export function hasDecimalNumber(text) {
   return DECIMAL_PATTERN.test(String(text ?? ""));
+}
+
+/**
+ * 인용부호. 원문 evidence에 없는 기호가 섞이면 임베딩 유사도가 희석된다.
+ * 곧은 따옴표와 둥근 따옴표를 모두 본다.
+ */
+const QUOTE_PATTERN = /['"‘’“”]/;
+
+export function hasQuoteMark(text) {
+  return QUOTE_PATTERN.test(String(text ?? ""));
 }
 
 /**
@@ -77,10 +87,15 @@ export function validateAgentResponse(payload, { whitelist, candidateIds }) {
       continue;
     }
 
-    // 아래 두 가지는 경고일 뿐 항목을 탈락시키지 않는다.
+    // 아래 세 가지는 경고일 뿐 항목을 탈락시키지 않는다.
     if (hasDecimalNumber(reason)) {
       console.warn(
         `[validate] ${placeId}: 추천 이유에 소수점 수치가 포함되어 있습니다 — ${reason}`,
+      );
+    }
+    if (hasQuoteMark(reason)) {
+      console.warn(
+        `[validate] ${placeId}: 추천 이유에 인용부호가 포함되어 있습니다 — ${reason}`,
       );
     }
     if (candidateIds && !candidateIds.has(placeId)) {

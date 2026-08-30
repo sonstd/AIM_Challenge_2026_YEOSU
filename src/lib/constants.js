@@ -56,8 +56,19 @@ export const COMPANION_AUTO_TAGS = {
 export const COMPANION_AUTO_BONUS = 4;
 
 /**
+ * 이 값보다 절댓값이 작으면 그 축은 "중립에 가까움"으로 본다.
+ * (personality.js 의 성향 강도 첫 구간과 같은 기준)
+ *
+ * 응답값이 ±1.25 / ±2.5 네 개의 합이라 축 합계가 0 부근에 몰린다.
+ * 실제로 한 축이 구간 경계(-5, 0, +5)에 정확히 떨어질 확률이 27.3%,
+ * 적어도 한 축이 경계일 확률이 47.2%다. 경계에 걸린 사용자에게
+ * 한쪽 성향 태그만 매칭 대상으로 삼으면 근거 없이 태그가 잘려 나간다.
+ */
+export const NEUTRAL_THRESHOLD = 2.5;
+
+/**
  * matched_tags 를 만들 때 쓰는 축별 성향 태그.
- * 사용자가 어느 쪽으로 기울었는지에 따라 그쪽 태그만 매칭 대상으로 본다.
+ * 사용자가 기운 쪽 태그를 쓰되, 중립에 가까우면 양쪽을 모두 인정한다.
  */
 export const AXIS_AFFINITY_TAGS = {
   x: {

@@ -149,6 +149,8 @@ export default function Wizard() {
   const [answers, setAnswers] = useState({});
   const [status, setStatus] = useState("idle");
   const [result, setResult] = useState(null);
+  // 매칭도는 제출 규격을 지키려고 본문이 아니라 X-Match-Scores 헤더로 온다.
+  const [matchScores, setMatchScores] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
 
   const conditionQuestion = CONDITION_QUESTIONS[conditionIndex];
@@ -209,7 +211,14 @@ export default function Wizard() {
       if (!response.ok) {
         throw new Error(data?.error ?? "추천을 생성하지 못했습니다.");
       }
+      let scores = {};
+      try {
+        scores = JSON.parse(response.headers.get("X-Match-Scores") ?? "{}");
+      } catch {
+        // 헤더가 없거나 깨져도 추천 자체는 보여준다. 매칭도만 숨겨진다.
+      }
       setResult(data);
+      setMatchScores(scores);
       setPhase("result");
       setStatus("idle");
     } catch (error) {
@@ -225,6 +234,7 @@ export default function Wizard() {
     setAnswerIndex(0);
     setAnswers({});
     setResult(null);
+    setMatchScores({});
     setErrorMessage(null);
     setStatus("idle");
   }
@@ -285,6 +295,7 @@ export default function Wizard() {
         <BrandBar onHome={restart} />
         <ResultView
           result={result}
+          matchScores={matchScores}
           travelType={travelType}
           onRestart={restart}
         />

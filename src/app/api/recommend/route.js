@@ -3,6 +3,8 @@ import {
   buildFallbackRecommendations,
   requestRecommendations,
 } from "@/lib/agent";
+// [DEBUG] 제출 전 삭제 — src/lib/debug-log.js 상단 안내 참고
+import { logFinalResponse } from "@/lib/debug-log";
 import {
   MAX_AGENT_ATTEMPTS,
   MAX_RECOMMENDATIONS,
@@ -98,6 +100,8 @@ export async function POST(request) {
         candidates,
         preferences,
         previousIssues: issues,
+        attempt,
+        maxAttempts: MAX_AGENT_ATTEMPTS,
       });
       reachedModel = true;
     } catch (err) {
@@ -157,19 +161,26 @@ export async function POST(request) {
   // ⑤ 응답 조립
   const scoreByPlaceId = new Map(scored.map((entry) => [entry.place_id, entry]));
 
+  /**
+   * 본문은 제출 규격(CLAUDE.md §5)과 정확히 같은 필드만 담는다.
+   * 이 응답을 그대로 저장한 파일이 제출물 02번이 되어야 하므로
+   * (규칙 1-5: 제출 JSON과 REST API 결과 일치), 화면 표시용 값은 본문에 넣지 않고
+   * X-Match-Scores 헤더로 따로 내려보낸다. 헤더는 저장되는 JSON에 섞이지 않는다.
+   */
   const recommendations = [];
+  const matchScores = {};
+
   for (const item of items.slice(0, MAX_RECOMMENDATIONS)) {
     const place = await getPlaceById(item.place_id);
     if (!place) continue;
     const entry = scoreByPlaceId.get(place.place_id);
+    matchScores[place.place_id] = entry?.matchScore ?? null;
     recommendations.push({
       place_id: place.place_id,
       place_name: place.place_name,
       recommend_reason: item.recommend_reason,
       matched_tags: entry?.matchedTags ?? [],
       image_prompt: place.image_prompt,
-      // 아래 둘은 화면 표시용. 대회 제출 시에는 빼도 된다(README 참고).
-      match_score: entry?.matchScore ?? null,
       images: place.images,
     });
   }
@@ -177,10 +188,20 @@ export async function POST(request) {
   // 카드에 순위 배지와 매칭도가 함께 붙으므로 둘의 순서가 어긋나면 버그처럼 보인다.
   // 후보 선정·Agent 선택까지는 조건 감점이 반영된 점수로 하되, 최종 노출 순서는
   // 화면에 실제로 찍히는 매칭도 기준으로 맞춘다.
-  recommendations.sort((a, b) => (b.match_score ?? -1) - (a.match_score ?? -1));
-
-  return Response.json(
-    { region_id: REGION_ID, recommendations },
-    { headers: { "X-Recommend-Source": source } },
+  recommendations.sort(
+    (a, b) => (matchScores[b.place_id] ?? -1) - (matchScores[a.place_id] ?? -1),
   );
+
+  const responseBody = { region_id: REGION_ID, recommendations };
+
+  // [DEBUG] 제출 전 삭제
+  logFinalResponse({ source, body: responseBody });
+
+  return Response.json(responseBody, {
+    headers: {
+      "X-Recommend-Source": source,
+      // 화면 표시 전용. 본문을 제출 규격 그대로 두기 위해 헤더로 뺐다.
+      "X-Match-Scores": JSON.stringify(matchScores),
+    },
+  });
 }

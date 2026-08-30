@@ -2,6 +2,7 @@ import {
   ALLOWED_ANSWER_VALUES,
   PERSONALITY_QUESTIONS,
 } from "@/config/questions";
+import { NEUTRAL_THRESHOLD } from "@/lib/constants";
 import {
   TRAVEL_TYPES,
   X_BAND_LABELS,
@@ -64,10 +65,15 @@ export function getTypeId(x, y) {
   return `X${getBandIndex(x)}Y${getBandIndex(y)}`;
 }
 
+/** 그 축이 중립에 가까운가 (유형 이름보다 강도를 앞세워야 하는 구간) */
+export function isNeutralAxis(score) {
+  return Math.abs(score) < NEUTRAL_THRESHOLD;
+}
+
 /** 성향 강도 — 좌표 절댓값 기준 */
 export function getIntensity(score) {
   const magnitude = Math.abs(score);
-  if (magnitude < 2.5) return { level: 0, label: "중립에 가까움" };
+  if (magnitude < NEUTRAL_THRESHOLD) return { level: 0, label: "중립에 가까움" };
   if (magnitude < 5) return { level: 1, label: "약한 선호" };
   if (magnitude < 7.5) return { level: 2, label: "뚜렷한 선호" };
   return { level: 3, label: "매우 강한 선호" };
@@ -92,6 +98,8 @@ export function resolveTravelType(x, y) {
     yBandLabel: Y_BAND_LABELS[yBand - 1],
     xIntensity: getIntensity(x),
     yIntensity: getIntensity(y),
+    xNeutral: isNeutralAxis(x),
+    yNeutral: isNeutralAxis(y),
     ...TRAVEL_TYPES[typeId],
   };
 }

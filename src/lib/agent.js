@@ -1,5 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
+// [DEBUG] 제출 전 삭제 — src/lib/debug-log.js 상단 안내 참고
+import { logAgentRequest, logAgentResponse } from "@/lib/debug-log";
 import { hasDecimalNumber, splitSentences } from "@/lib/validate";
 
 /**
@@ -28,6 +30,9 @@ const SYSTEM_INSTRUCTION = [
   "   - 3문장: evidence_text_3(활동) 기반.",
   "4. 각 문장은 독립적으로 근거를 가져야 한다. 제공된 evidence_text에 없는 내용은 절대 쓰지 않는다.",
   "5. 소수점이 포함된 수치(예: 1.5km)는 인용하지 않는다. 필요하면 수치를 빼고 서술한다.",
+  "   마침표는 문장 구분자로만 쓰이므로 수치 안의 소수점이 문장 수 파싱을 깨뜨린다.",
+  "5-1. 작은따옴표와 큰따옴표를 쓰지 않는다. evidence에 따옴표가 있어도 따옴표 없이 풀어 쓴다.",
+  "     예: '여수 밤바다' 노래 → 여수 밤바다라는 노래",
   "6. 사용자의 여행 유형·조건(동반·기간·경비·이동수단)은 문장의 어조 조정에만 반영한다.",
   "   evidence에 없는 사실을 추가하지 않는다. 특히 요금·가격·소요시간은 절대 언급하지 않는다.",
   "7. 문장은 마침표로 끝낸다. 마침표는 문장의 끝에만 쓴다.",
@@ -113,10 +118,23 @@ export async function requestRecommendations({
   candidates,
   preferences,
   previousIssues = [],
+  attempt = 1,
+  maxAttempts = 1,
 }) {
+  const prompt = buildPrompt({ candidates, preferences, previousIssues });
+
+  // [DEBUG] 제출 전 삭제
+  logAgentRequest({
+    attempt,
+    maxAttempts,
+    model: MODEL,
+    systemInstruction: SYSTEM_INSTRUCTION,
+    prompt,
+  });
+
   const response = await getClient().models.generateContent({
     model: MODEL,
-    contents: buildPrompt({ candidates, preferences, previousIssues }),
+    contents: prompt,
     config: {
       systemInstruction: SYSTEM_INSTRUCTION,
       responseMimeType: "application/json",
@@ -125,7 +143,12 @@ export async function requestRecommendations({
     },
   });
 
-  return parseJson(response.text);
+  const parsed = parseJson(response.text);
+
+  // [DEBUG] 제출 전 삭제
+  logAgentResponse({ attempt, maxAttempts, raw: response.text, parsed });
+
+  return parsed;
 }
 
 /** 소수점 수치가 없는 첫 문장을 고른다. 없으면 null. */

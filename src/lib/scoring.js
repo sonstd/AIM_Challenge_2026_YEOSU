@@ -7,6 +7,7 @@ import {
   DURATION_PENALTIES,
   EXCLUSIVE_GROUPS,
   MIN_CANDIDATES,
+  NEUTRAL_THRESHOLD,
   TRANSPORT_PENALTIES,
 } from "@/lib/constants";
 import { getAllPlaces } from "@/lib/places";
@@ -47,13 +48,22 @@ function collectPenalties(tables) {
 }
 
 /**
- * 사용자가 기울어진 쪽의 성향 태그만 매칭 대상으로 본다.
+ * 사용자가 기울어진 쪽의 성향 태그를 매칭 대상으로 본다.
  * 예) x가 음수(자연·힐링 쪽)이면 "액티비티" 태그는 매칭으로 치지 않는다.
+ *
+ * 단, 그 축이 중립에 가까우면(|점수| < 2.5) 양쪽 태그를 모두 인정한다.
+ * 축 합계가 정확히 0인 사용자에게 "0은 음수가 아니다"는 이유만으로
+ * 반대쪽 태그를 전부 잘라내면 근거가 없기 때문이다.
  */
+function axisTags(score, { negative, positive }) {
+  if (Math.abs(score) < NEUTRAL_THRESHOLD) return [...negative, ...positive];
+  return score < 0 ? negative : positive;
+}
+
 function affinityTagsFor({ x, y }) {
   return [
-    ...(x < 0 ? AXIS_AFFINITY_TAGS.x.negative : AXIS_AFFINITY_TAGS.x.positive),
-    ...(y < 0 ? AXIS_AFFINITY_TAGS.y.negative : AXIS_AFFINITY_TAGS.y.positive),
+    ...axisTags(x, AXIS_AFFINITY_TAGS.x),
+    ...axisTags(y, AXIS_AFFINITY_TAGS.y),
   ];
 }
 

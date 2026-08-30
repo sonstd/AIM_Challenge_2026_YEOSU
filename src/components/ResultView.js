@@ -2,7 +2,12 @@
 
 import PlaceCard from "@/components/PlaceCard";
 
-export default function ResultView({ result, travelType, onRestart }) {
+export default function ResultView({
+  result,
+  matchScores = {},
+  travelType,
+  onRestart,
+}) {
   const count = result.recommendations.length;
 
   return (
@@ -17,7 +22,10 @@ export default function ResultView({ result, travelType, onRestart }) {
             className="mt-1.5 text-sm font-bold"
             style={{ color: "var(--muted)" }}
           >
-            {travelType.name} · {travelType.xBandLabel} / {travelType.yBandLabel}
+            {travelType.name} ·{" "}
+            {travelType.xNeutral ? "자연·힐링 ↔ 액티비티 중간" : travelType.xBandLabel}{" "}
+            /{" "}
+            {travelType.yNeutral ? "한적 ↔ 핫플 중간" : travelType.yBandLabel}
           </p>
         )}
       </div>
@@ -27,6 +35,7 @@ export default function ResultView({ result, travelType, onRestart }) {
           <PlaceCard
             key={recommendation.place_id}
             recommendation={recommendation}
+            matchScore={matchScores[recommendation.place_id]}
             index={index}
           />
         ))}

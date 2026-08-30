@@ -39,11 +39,11 @@ function ImagePlaceholder() {
   );
 }
 
-export default function PlaceCard({ recommendation, index }) {
+export default function PlaceCard({ recommendation, matchScore, index }) {
   const [imageFailed, setImageFailed] = useState(false);
 
-  const { place_name, recommend_reason, matched_tags, images, match_score } =
-    recommendation;
+  // 매칭도는 응답 본문이 아니라 X-Match-Scores 헤더에서 온다(제출 규격 유지).
+  const { place_name, recommend_reason, matched_tags, images } = recommendation;
   const src = images?.[0];
   const showImage = Boolean(src) && !imageFailed;
 
@@ -86,12 +86,12 @@ export default function PlaceCard({ recommendation, index }) {
       <div className="p-4 sm:p-5">
         <div className="flex items-baseline justify-between gap-2">
           <h3 className="text-lg font-bold sm:text-xl">{place_name}</h3>
-          {typeof match_score === "number" && (
+          {typeof matchScore === "number" && (
             <span
               className="shrink-0 text-xs font-extrabold"
               style={{ color: "var(--accent)" }}
             >
-              매칭도 {match_score}%
+              매칭도 {matchScore}%
             </span>
           )}
         </div>

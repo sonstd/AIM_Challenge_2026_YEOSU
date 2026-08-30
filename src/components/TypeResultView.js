@@ -129,6 +129,23 @@ export default function TypeResultView({ travelType, onContinue }) {
           {description}
         </p>
 
+        {/*
+          축 합계가 0 부근이면 구간 경계에 걸린 것이라 유형 이름만 보면
+          성향이 뚜렷한 것처럼 오해된다. 그 경우 중립임을 먼저 알려 준다.
+        */}
+        {(travelType.xNeutral || travelType.yNeutral) && (
+          <p
+            className="mt-3 rounded-xl px-3.5 py-2.5 text-xs font-bold leading-relaxed"
+            style={{
+              background: "color-mix(in oklch, var(--accent) 10%, transparent)",
+              color: "var(--accent)",
+            }}
+          >
+            {neutralAxisNames(travelType)} 성향이 중간에 가까워요. 어느 한쪽으로
+            치우치지 않아서 추천도 양쪽 성격이 섞여 나옵니다.
+          </p>
+        )}
+
         <div
           className="mt-5 rounded-2xl border-2 p-4"
           style={{ borderColor: "var(--border)", background: "var(--surface)" }}
@@ -182,6 +199,13 @@ export default function TypeResultView({ travelType, onContinue }) {
       <AxisPlane x={x} y={y} typeId={travelType.typeId} />
     </section>
   );
+}
+
+/** 중립에 가까운 축이 무엇인지 사람이 읽을 수 있는 이름으로 만든다. */
+function neutralAxisNames({ xNeutral, yNeutral }) {
+  if (xNeutral && yNeutral) return "두 축 모두";
+  if (xNeutral) return `${AXIS_LABELS.xNegative}·${AXIS_LABELS.xPositive}`;
+  return `${AXIS_LABELS.yNegative}·${AXIS_LABELS.yPositive}`;
 }
 
 /** +5, -2.5 처럼 부호를 붙이고 불필요한 소수점은 없앤다. */
