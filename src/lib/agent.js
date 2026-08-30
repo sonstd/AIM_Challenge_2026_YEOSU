@@ -21,14 +21,15 @@ const SYSTEM_INSTRUCTION = [
   "당신은 여수 여행지 추천 Agent다. 아래 지침을 예외 없이 지킨다.",
   "",
   "1. 반드시 제공된 후보 목록의 place_id만 사용한다. 목록에 없는 장소는 절대 만들지 않는다.",
-  "2. 후보 중 3~5곳을 선정한다.",
+  "2. 후보 중 정확히 3곳을 선정한다. 성향 매칭도가 높은 순서를 우선 고려하되, 세 곳의 성격이 겹치지 않게 고른다.",
   "3. 각 장소의 추천 이유(recommend_reason)는 정확히 3문장으로 작성한다.",
   "   - 1문장: evidence_text_1(객관적 사실) 기반. 장소명을 반드시 포함한다.",
   "   - 2문장: evidence_text_2(분위기·감각) 기반.",
   "   - 3문장: evidence_text_3(활동) 기반.",
   "4. 각 문장은 독립적으로 근거를 가져야 한다. 제공된 evidence_text에 없는 내용은 절대 쓰지 않는다.",
   "5. 소수점이 포함된 수치(예: 1.5km)는 인용하지 않는다. 필요하면 수치를 빼고 서술한다.",
-  "6. 사용자의 동반 유형·세부사항은 문장의 어조 조정에만 반영한다. evidence에 없는 사실을 추가하지 않는다.",
+  "6. 사용자의 여행 유형·조건(동반·기간·경비·이동수단)은 문장의 어조 조정에만 반영한다.",
+  "   evidence에 없는 사실을 추가하지 않는다. 특히 요금·가격·소요시간은 절대 언급하지 않는다.",
   "7. 문장은 마침표로 끝낸다. 마침표는 문장의 끝에만 쓴다.",
   "8. JSON만 출력한다. 마크다운 코드펜스나 설명 문장을 덧붙이지 않는다.",
 ].join("\n");
@@ -51,10 +52,11 @@ const RESPONSE_SCHEMA = {
   required: ["recommendations"],
 };
 
-/** 후보에서 Agent에게 넘길 필드만 추린다. 점수나 내부 태그는 넘기지 않는다. */
+/** 후보에서 Agent에게 넘길 필드만 추린다. 내부 감점이나 태그는 넘기지 않는다. */
 export function buildCandidatePayload(candidates) {
-  return candidates.map(({ place }) => ({
+  return candidates.map(({ place, matchScore }) => ({
     place_id: place.place_id,
+    match_score: matchScore,
     place_name: place.place_name,
     summary: place.summary,
     evidence_text_1: place.evidence_text_1,
@@ -66,14 +68,20 @@ export function buildCandidatePayload(candidates) {
 }
 
 function buildPrompt({ candidates, preferences, previousIssues }) {
-  const { companion, themes, detail } = preferences;
+  const { conditions, travelType } = preferences;
   const lines = [
-    "## 사용자 선택",
-    `- 동반 유형: ${companion}`,
-    `- 선호 테마(선택 순서대로, 앞쪽일수록 중요): ${themes.join(", ")}`,
-    `- 세부사항: ${detail ?? "선택 안 함"}`,
+    "## 사용자 여행 유형",
+    `- 유형: ${travelType.name} (${travelType.typeId})`,
+    `- 성향: ${travelType.xBandLabel} / ${travelType.yBandLabel}`,
+    `- 설명: ${travelType.description}`,
     "",
-    "## 후보 목록",
+    "## 여행 조건 (어조 조정용. 추천 문장에 조건 자체를 언급하지는 말 것)",
+    `- 동반: ${conditions.companion}`,
+    `- 기간: ${conditions.duration}`,
+    `- 경비 성향: ${conditions.budget}`,
+    `- 이동 수단: ${conditions.transport}`,
+    "",
+    "## 후보 목록 (match_score = 성향 매칭도)",
     JSON.stringify(buildCandidatePayload(candidates), null, 2),
   ];
 

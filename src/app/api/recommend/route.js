@@ -1,55 +1,66 @@
+import { CONDITION_QUESTIONS } from "@/config/questions";
 import {
   buildFallbackRecommendations,
   requestRecommendations,
 } from "@/lib/agent";
 import {
-  COMPANIONS,
-  DETAILS_BY_COMPANION,
   MAX_AGENT_ATTEMPTS,
   MAX_RECOMMENDATIONS,
-  MAX_THEMES,
   MIN_RECOMMENDATIONS,
-  MIN_THEMES,
   REGION_ID,
-  THEMES,
+  TARGET_RECOMMENDATIONS,
 } from "@/lib/constants";
+import {
+  computeAxisScores,
+  isPersonalityComplete,
+  resolveTravelType,
+} from "@/lib/personality";
 import { getAllPlaces, getPlaceById } from "@/lib/places";
 import { scoreAllPlaces, selectCandidates } from "@/lib/scoring";
 import { validateAgentResponse } from "@/lib/validate";
 
-/** 요청 본문을 검증하고 정규화한다. 문제가 있으면 error 문자열을 돌려준다. */
-function parsePreferences(body) {
-  const companion = body?.companion;
-  if (!COMPANIONS.includes(companion)) {
-    return { error: `companion 값이 올바르지 않습니다: ${companion}` };
+/**
+ * 요청 본문을 검증하고 정규화한다. 문제가 있으면 error 문자열을 돌려준다.
+ *
+ * X/Y 좌표는 클라이언트가 보낸 값을 믿지 않고 8문항 응답에서 서버가 다시 계산한다.
+ */
+function parseRequest(body) {
+  const conditions = body?.conditions;
+  if (!conditions || typeof conditions !== "object") {
+    return { error: "conditions 가 없습니다." };
   }
 
-  const themes = body?.themes;
-  if (!Array.isArray(themes)) {
-    return { error: "themes 는 배열이어야 합니다." };
-  }
-  if (themes.length < MIN_THEMES || themes.length > MAX_THEMES) {
-    return {
-      error: `themes 는 ${MIN_THEMES}~${MAX_THEMES}개여야 합니다. (현재 ${themes.length}개)`,
-    };
-  }
-  const unknown = themes.filter((theme) => !THEMES.includes(theme));
-  if (unknown.length) {
-    return { error: `알 수 없는 테마: ${unknown.join(", ")}` };
-  }
-  if (new Set(themes).size !== themes.length) {
-    return { error: "themes 에 중복된 값이 있습니다." };
-  }
-
-  const detail = body?.detail ?? null;
-  if (detail !== null) {
-    const allowed = DETAILS_BY_COMPANION[companion]?.options ?? [];
-    if (!allowed.includes(detail)) {
-      return { error: `"${companion}" 에 대한 detail 값이 올바르지 않습니다: ${detail}` };
+  for (const { id, question, options } of CONDITION_QUESTIONS) {
+    if (!options.includes(conditions[id])) {
+      return {
+        error: `"${question}" 의 답이 올바르지 않습니다: ${conditions[id]}`,
+      };
     }
   }
 
-  return { preferences: { companion, themes, detail } };
+  const answers = body?.answers;
+  if (!answers || typeof answers !== "object") {
+    return { error: "answers 가 없습니다." };
+  }
+  if (!isPersonalityComplete(answers)) {
+    return { error: "성향 8문항에 모두 답해야 추천을 받을 수 있습니다." };
+  }
+
+  const axisScores = computeAxisScores(answers);
+  const travelType = resolveTravelType(axisScores.x, axisScores.y);
+
+  return {
+    preferences: {
+      conditions: {
+        companion: conditions.companion,
+        duration: conditions.duration,
+        budget: conditions.budget,
+        transport: conditions.transport,
+      },
+      axisScores,
+      travelType,
+    },
+  };
 }
 
 export async function POST(request) {
@@ -63,7 +74,7 @@ export async function POST(request) {
     );
   }
 
-  const { preferences, error } = parsePreferences(body);
+  const { preferences, error } = parseRequest(body);
   if (error) return Response.json({ error }, { status: 400 });
 
   // ① 스코어링 → ② 후보 압축
@@ -90,7 +101,10 @@ export async function POST(request) {
       });
       reachedModel = true;
     } catch (err) {
-      console.error(`[recommend] Agent 호출 실패 (${attempt}/${MAX_AGENT_ATTEMPTS}):`, err?.message ?? err);
+      console.error(
+        `[recommend] Agent 호출 실패 (${attempt}/${MAX_AGENT_ATTEMPTS}):`,
+        err?.message ?? err,
+      );
       continue;
     }
 
@@ -113,7 +127,10 @@ export async function POST(request) {
   // 모델에 아예 닿지 못한 경우(키 미설정·네트워크 차단)에만 결정적 대체 경로를 쓴다.
   // 검증 실패로 인한 부분 응답에는 관여하지 않는다.
   if (!reachedModel && items.length < MIN_RECOMMENDATIONS) {
-    const fallback = buildFallbackRecommendations(candidates, 4);
+    const fallback = buildFallbackRecommendations(
+      candidates,
+      TARGET_RECOMMENDATIONS,
+    );
     const result = validateAgentResponse(
       { recommendations: fallback },
       { whitelist, candidateIds },
@@ -138,25 +155,29 @@ export async function POST(request) {
   }
 
   // ⑤ 응답 조립
-  const matchedTagsByPlaceId = new Map(
-    scored.map((entry) => [entry.place_id, entry.matchedTags]),
-  );
+  const scoreByPlaceId = new Map(scored.map((entry) => [entry.place_id, entry]));
 
   const recommendations = [];
   for (const item of items.slice(0, MAX_RECOMMENDATIONS)) {
     const place = await getPlaceById(item.place_id);
     if (!place) continue;
+    const entry = scoreByPlaceId.get(place.place_id);
     recommendations.push({
       place_id: place.place_id,
       place_name: place.place_name,
       recommend_reason: item.recommend_reason,
-      matched_tags: matchedTagsByPlaceId.get(place.place_id) ?? [],
+      matched_tags: entry?.matchedTags ?? [],
       image_prompt: place.image_prompt,
+      // 아래 둘은 화면 표시용. 대회 제출 시에는 빼도 된다(README 참고).
+      match_score: entry?.matchScore ?? null,
       images: place.images,
     });
   }
 
-  console.log(recommendations);
+  // 카드에 순위 배지와 매칭도가 함께 붙으므로 둘의 순서가 어긋나면 버그처럼 보인다.
+  // 후보 선정·Agent 선택까지는 조건 감점이 반영된 점수로 하되, 최종 노출 순서는
+  // 화면에 실제로 찍히는 매칭도 기준으로 맞춘다.
+  recommendations.sort((a, b) => (b.match_score ?? -1) - (a.match_score ?? -1));
 
   return Response.json(
     { region_id: REGION_ID, recommendations },

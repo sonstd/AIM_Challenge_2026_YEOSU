@@ -42,7 +42,8 @@ function ImagePlaceholder() {
 export default function PlaceCard({ recommendation, index }) {
   const [imageFailed, setImageFailed] = useState(false);
 
-  const { place_name, recommend_reason, matched_tags, images } = recommendation;
+  const { place_name, recommend_reason, matched_tags, images, match_score } =
+    recommendation;
   const src = images?.[0];
   const showImage = Boolean(src) && !imageFailed;
 
@@ -70,10 +71,12 @@ export default function PlaceCard({ recommendation, index }) {
           <ImagePlaceholder />
         )}
         <span
-          className="absolute left-3 top-3 flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold"
+          className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-sm font-extrabold"
           style={{
-            background: "var(--accent)",
-            color: "var(--accent-contrast)",
+            // 1위만 금색으로 구분한다.
+            background: index === 0 ? "var(--cta)" : "var(--accent)",
+            color: "#fff",
+            boxShadow: "0 2px 8px oklch(0.3 0.05 250 / 0.35)",
           }}
         >
           {index + 1}
@@ -81,7 +84,17 @@ export default function PlaceCard({ recommendation, index }) {
       </div>
 
       <div className="p-4 sm:p-5">
-        <h3 className="text-lg font-bold sm:text-xl">{place_name}</h3>
+        <div className="flex items-baseline justify-between gap-2">
+          <h3 className="text-lg font-bold sm:text-xl">{place_name}</h3>
+          {typeof match_score === "number" && (
+            <span
+              className="shrink-0 text-xs font-extrabold"
+              style={{ color: "var(--accent)" }}
+            >
+              매칭도 {match_score}%
+            </span>
+          )}
+        </div>
 
         {matched_tags?.length > 0 && (
           <ul className="mt-2.5 flex flex-wrap gap-1.5">

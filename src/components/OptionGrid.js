@@ -1,38 +1,32 @@
 "use client";
 
 /**
- * 위저드 각 단계에서 쓰는 선택 버튼 그리드.
+ * 조건 문항의 선택지 그리드.
  *
- * multi 모드에서는 selected 배열의 순서가 곧 사용자의 선택 순서이므로,
- * 배지에 순번을 그대로 노출해 "첫 번째 선택에 가중치가 붙는다"는 점을 보이게 한다.
+ * 높이를 고정하지 않고 내용에 맞춰 잡는다. 짧은 단어("혼자")가 큰 빈 칸 가운데
+ * 떠 있는 것처럼 보이지 않게 하기 위함이다.
+ *
+ * 열 수는 선택지 개수에서 자동으로 정한다. 3지선다를 1열로 깔면 짧은 문구 하나가
+ * 화면 폭을 다 쓰는 긴 막대가 되어 빈 공간이 크게 남는다.
  */
-export default function OptionGrid({
-  options,
-  selected,
-  onSelect,
-  multi = false,
-  columns = 2,
-  disabledWhenUnselected = false,
-}) {
-  const selectedList = multi ? selected : selected === null ? [] : [selected];
+function gridColumns(count) {
+  if (count === 3) return "grid-cols-1 sm:grid-cols-3";
+  return "grid-cols-2";
+}
 
+export default function OptionGrid({ options, selected, onSelect }) {
   return (
-    <div
-      className={`grid gap-2.5 ${columns === 2 ? "grid-cols-2" : "grid-cols-1"}`}
-    >
+    <div className={`grid gap-2 ${gridColumns(options.length)}`}>
       {options.map((option) => {
-        const index = selectedList.indexOf(option);
-        const isSelected = index !== -1;
-        const isDisabled = disabledWhenUnselected && !isSelected;
+        const isSelected = selected === option;
 
         return (
           <button
             key={option}
             type="button"
             onClick={() => onSelect(option)}
-            disabled={isDisabled}
             aria-pressed={isSelected}
-            className="chunky relative flex min-h-15 items-center justify-center rounded-2xl border-2 px-3 py-3 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-45 sm:text-base"
+            className="chunky flex items-center justify-center rounded-2xl border-2 px-4 py-3 text-center text-sm font-bold leading-snug sm:text-base"
             style={{
               borderColor: isSelected ? "var(--accent)" : "var(--border)",
               background: isSelected ? "var(--accent)" : "var(--surface)",
@@ -43,17 +37,6 @@ export default function OptionGrid({
             }}
           >
             {option}
-            {multi && isSelected && (
-              <span
-                className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold"
-                style={{
-                  background: "var(--accent-contrast)",
-                  color: "var(--accent)",
-                }}
-              >
-                {index + 1}
-              </span>
-            )}
           </button>
         );
       })}

@@ -1,8 +1,8 @@
 # 여수 여행지 추천 서비스 (AIM Challenge 2026 예선)
 
-사용자의 여행 취향을 3단계로 입력받아, AI Agent가 여수 관광지 20곳 중 3~5곳을
-추천 이유·매칭 태그·이미지와 함께 보여주는 Next.js 앱입니다. 백엔드 DB 없이
-프로젝트 내부 정적 데이터만 사용합니다.
+여행 조건 4문항 + 성향 8문항으로 사용자의 여행 유형(16종)을 판정하고,
+그 좌표에 맞는 여수 관광지 BEST 3을 추천 이유·매칭도와 함께 보여주는 Next.js 앱입니다.
+백엔드 DB 없이 프로젝트 내부 정적 데이터만 사용합니다.
 
 ## 실행
 
@@ -14,81 +14,111 @@ http://localhost:3000 에서 확인합니다.
 
 ## API 키 설정
 
-Agent 호출은 **서버사이드에서만** 일어납니다. 키는 임시로 문자열 `"api_key"`가
-들어가 있고, 환경변수가 있으면 그쪽이 우선합니다.
+Agent 호출은 **서버사이드에서만** 일어납니다.
 
 ```bash
 # .env.local
 GEMINI_API_KEY=발급받은_키
-GEMINI_MODEL=gemini-3.7-flash   # 선택. 생략하면 이 값이 기본
 ```
 
 키가 없거나 네트워크가 막혀 Agent에 **닿지 못하면**, 서버는 evidence_text_1~3을
 그대로 조립한 결정적 대체 응답을 돌려주고 응답 헤더에
 `X-Recommend-Source: fallback`을 붙입니다. 정상 경로는 `agent`입니다.
-(대체 경로는 문장을 새로 생성하지 않으므로 "evidence에 없는 내용 금지" 규칙을
-구조적으로 위반할 수 없습니다. 불필요하면 `src/app/api/recommend/route.js`의
-해당 블록을 지우면 500으로 떨어집니다.)
 
-## 이미지
+## 화면 흐름
 
-`public/images/places/{place_id}_01.png` ~ `_03.png` 경로를 기대합니다.
-파일이 없으면 카드가 자동으로 "이미지 준비 중" 플레이스홀더로 대체됩니다.
-프롬프트와 시드는 `src/data/places.json`의 `image_prompt` / `seeds`에 있습니다.
+```
+시작 → 여행 조건 4문항 → 여행 성향 8문항 → 성향 결과 → 맞춤 추천 BEST 3
+```
+
+- 조건 4문항(동반·기간·경비·이동수단)은 **X/Y 점수에 전혀 반영되지 않습니다.**
+  후보 감점과 Agent 어조 조정에만 씁니다.
+- 성향 8문항은 `X1 → Y1 → X2 → Y2 → X3 → Y3 → X4 → Y4` 순서로 노출됩니다.
+- 8문항을 모두 답해야 결과 화면으로 넘어갑니다(서버에서도 다시 검사합니다).
+
+## 성향 점수
+
+각 문항은 4단계로 답하고, 값은 화면에 노출하지 않습니다.
+
+| 응답 | 값 |
+| --- | --- |
+| A가 훨씬 좋아요 | −2.5 |
+| A가 조금 더 좋아요 | −1.25 |
+| B가 조금 더 좋아요 | +1.25 |
+| B가 훨씬 좋아요 | +2.5 |
+
+```
+X = X1 + X2 + X3 + X4     (−10 ≤ X ≤ 10)  자연·힐링 ↔ 액티비티·체험
+Y = Y1 + Y2 + Y3 + Y4     (−10 ≤ Y ≤ 10)  한적·로컬 ↔ 핫플·데이트
+```
+
+구간(각 구간은 왼쪽 경계 포함): `−10~−5` → 1, `−5~0` → 2, `0~5` → 3, `5~10` → 4.
+`typeId`는 `X{1-4}Y{1-4}` 형식입니다.
+
+성향 강도: `<2.5` 중립에 가까움 / `<5` 약한 선호 / `<7.5` 뚜렷한 선호 / `≤10` 매우 강한 선호.
+
+> **16개 유형 이름은 아직 TEMP입니다.** `src/config/travel-types.js`의
+> `name`/`description`/`keywords`만 교체하면 되고, 판정 로직과 UI는 손댈 필요가 없습니다.
 
 ## 구조
 
 | 경로 | 역할 |
 | --- | --- |
-| `src/data/places.json` | 여행지 20곳 원본 데이터 |
+| `src/data/places.json` | 여행지 20곳 원본 데이터 (수정하지 않음) |
+| `src/data/place-axis.json` | 장소별 성향 좌표 `{x, y}` — **튜닝은 여기서만** |
+| `src/config/questions.js` | 조건 4문항 + 성향 8문항 |
+| `src/config/travel-types.js` | 16개 유형 이름·설명 (TEMP) |
 | `src/lib/places.js` | **데이터 접근 레이어.** `getAllPlaces()` / `getPlaceById(id)` |
-| `src/lib/constants.js` | 선택지·감점표·배타 그룹 등 공유 상수 |
-| `src/lib/scoring.js` | ① 스코어링 ② 후보 압축 |
+| `src/lib/personality.js` | X/Y 계산, 구간·유형·강도 판정 |
+| `src/lib/scoring.js` | ① 매칭도·감점 스코어링 ② 후보 압축 |
 | `src/lib/agent.js` | ③ Gemini 호출 (서버 전용) |
 | `src/lib/validate.js` | ④ 검증 레이어 |
 | `src/app/api/recommend/route.js` | 파이프라인 조립 + ⑤ 응답 조립 |
-| `src/components/` | 3단계 위저드 UI |
 
-**컴포넌트와 API 라우트는 `places.json`을 직접 import하지 않습니다.** 반드시
-`src/lib/places.js`를 거칩니다. 나중에 DB를 붙일 때 이 파일 내부만 쿼리로 바꾸면
-되도록 두 함수는 지금부터 `async` 시그니처입니다.
+**컴포넌트와 API 라우트는 JSON을 직접 import하지 않습니다.** 반드시
+`src/lib/places.js`를 거칩니다. 좌표(`place-axis.json`)도 이 레이어에서 합쳐 주므로
+호출부는 파일이 둘로 나뉜 걸 알 필요가 없습니다.
 
-`src/data/places.json`은 원본 CSV에서 생성했습니다. 재생성은 결정적입니다.
+`places.json`은 원본 CSV에서 생성했고 재생성은 결정적입니다:
 
 ```bash
 node scripts/generate-places.mjs
-# CSV가 다른 곳에 있으면: PLACES_CSV=/경로/여행지_20_여수.csv node scripts/generate-places.mjs
 ```
-
-CSV에 없는 `image_prompt`와 `seeds`는 스크립트 안의 `ART` 맵에 장소별로
-직접 작성해 두었습니다(`evidence_text_4`의 대표 볼거리를 기준으로 맞췄습니다).
 
 ## 추천 파이프라인
 
 ```
 POST /api/recommend
-  { "companion": "가족", "themes": ["자연·힐링","아이와함께"], "detail": "어린 자녀" }
+{
+  "conditions": { "companion": "가족", "duration": "당일치기",
+                  "budget": "적당히 쓰면서 즐긴다", "transport": "자가용" },
+  "answers": { "X1": -2.5, "Y1": -1.25, ... , "Y4": -1.25 }
+}
 
-① 스코어링   score = 선택 태그수×2 − avoid 감점 + (themes[0] 매칭 시 +0.5)
-                     + (동반 유형 자동 태그 매칭 시 +1.5)
+① 스코어링   매칭도(0~100) + 동반 자동 태그 가산 − 조건 감점
 ② 후보 압축   상위 8곳 (최소 5곳 보장), 배타 그룹은 점수 높은 쪽만
-③ Agent      후보의 evidence_text_1~5 기반으로 3~5곳 선정, 이유는 정확히 3문장
+③ Agent      후보의 evidence_text_1~5 기반으로 정확히 3곳 선정, 이유는 3문장
 ④ 검증        화이트리스트 / 중복 / 개수(3~5) / 문장수(2~5) → 실패 시 최대 3회 재호출
 ⑤ 응답 조립   getPlaceById()로 place_name·image_prompt·images 결합
 ```
 
-`avoid_tags`는 하드 필터가 아니라 소프트 감점입니다. 감점 폭은 동반 유형별로
-다르고, `detail`이 `어린 자녀`이면 2배가 됩니다.
+**X/Y 좌표는 클라이언트가 보낸 값을 믿지 않고 8문항 응답에서 서버가 다시 계산합니다.**
 
-2단계에서 사용자가 고르는 테마는 6개(`자연·힐링` `액티비티` `사진·인생샷` `야경`
-`문화·역사` `맛집·미식`)입니다. `아이와함께`·`로맨틱·커플`은 선택지에서 빼는 대신
-1단계 동반 유형에서 자동으로 따라옵니다 — `가족`이면 `아이와함께`, `연인·부부`면
-`로맨틱·커플`을 가진 장소에 **+1.5**를 주고 `matched_tags`에도 포함시킵니다.
-이 자동 태그는 `×2` 가중치 대상이 아닌 고정 가산점이며, `places.json`의
-`preference_tags` 값은 그대로 둡니다(`COMPANION_AUTO_TAGS` 참고).
+**매칭도**는 사용자 좌표와 장소 좌표의 거리를 최대 거리(√800)로 정규화한 값입니다.
+조건 감점을 섞지 않아서, "성향이 얼마나 맞는가"만 나타냅니다.
 
-재호출 시에는 직전 응답의 검증 실패 사유를 프롬프트에 되먹여 교정을 유도합니다.
-3회 모두 실패하면 검증을 통과한 항목만으로 응답하고, 3곳에 못 미치면 500입니다.
+조건 감점은 **후보 선정과 Agent의 3곳 선택까지만** 영향을 줍니다. 최종 응답은
+`match_score` 내림차순으로 정렬해서 내보냅니다. 카드에 순위 배지와 매칭도가 함께
+붙기 때문에, 둘의 순서가 어긋나면 버그처럼 보이기 때문입니다.
+
+`avoid_tags`는 하드 필터가 아니라 소프트 감점입니다. 동반 유형(`AVOID_PENALTIES`),
+기간(`DURATION_PENALTIES`), 이동수단(`TRANSPORT_PENALTIES`) 감점표를 합산합니다.
+`가족`이면 `아이와함께`, `연인`이면 `로맨틱·커플` 태그를 가진 장소에 가산점을 주고
+`matched_tags`에도 포함시킵니다.
+
+> **경비 문항은 추천 순위에 영향을 주지 않습니다.** places.json에 가격·요금 데이터가
+> 없기 때문입니다. 현재는 Agent 어조 조정용으로만 전달합니다. 순위에 반영하려면
+> 장소별 가격대 데이터를 먼저 추가해야 합니다.
 
 ## 응답 형식
 
@@ -97,12 +127,13 @@ POST /api/recommend
   "region_id": "YEOSU",
   "recommendations": [
     {
-      "place_id": "YEOSU_001",
-      "place_name": "오동도",
+      "place_id": "YEOSU_008",
+      "place_name": "무술목해변",
       "recommend_reason": "...",
-      "matched_tags": ["자연·힐링", "아이와함께"],
+      "matched_tags": ["자연·힐링"],
       "image_prompt": "...",
-      "images": ["/images/places/YEOSU_001_01.png", "..."]
+      "match_score": 85,
+      "images": ["/images/places/YEOSU_008_01.png", "..."]
     }
   ]
 }
@@ -110,11 +141,10 @@ POST /api/recommend
 
 제출용 JSON이 필요하면 API를 직접 호출해 응답을 그대로 저장하면 됩니다.
 
-```bash
-curl -s -X POST http://localhost:3000/api/recommend -H "Content-Type: application/json" -d '{"companion":"가족","themes":["자연·힐링","액티비티"],"detail":"어린 자녀"}' -o recommendations.json
-```
+> `match_score`와 `images`는 화면 표시용으로 덧붙인 필드입니다. 제출 검증기가
+> 엄격하다면 `src/app/api/recommend/route.js`의 응답 조립부에서 두 줄만 빼면 됩니다.
 
-> `images`는 스펙 ⑤("place_name, image_prompt, images를 결합")를 따라 포함했습니다.
-> 스펙의 예시 JSON에는 이 필드가 없으므로, 제출 검증기가 엄격하다면
-> `src/app/api/recommend/route.js`의 응답 조립부에서 `images` 한 줄만 빼면 됩니다.
-> (단, 결과 화면 이미지는 이 필드로 그립니다.)
+## 이미지
+
+`public/images/places/{place_id}_01.png` ~ `_03.png` 경로를 기대합니다.
+파일이 없으면 카드가 자동으로 "이미지 준비 중" 플레이스홀더로 대체됩니다.

@@ -1,15 +1,18 @@
-import { getAllPlaces } from "@/lib/places";
 import {
   AVOID_PENALTIES,
+  AXIS_AFFINITY_TAGS,
   CANDIDATE_LIMIT,
   COMPANION_AUTO_BONUS,
   COMPANION_AUTO_TAGS,
+  DURATION_PENALTIES,
   EXCLUSIVE_GROUPS,
   MIN_CANDIDATES,
-  PENALTY_DOUBLING_DETAIL,
-  PRIMARY_THEME_BONUS,
-  TAG_MATCH_WEIGHT,
+  TRANSPORT_PENALTIES,
 } from "@/lib/constants";
+import { getAllPlaces } from "@/lib/places";
+
+/** 좌표 평면의 최대 거리: (-10,-10) ↔ (+10,+10) */
+const MAX_DISTANCE = Math.hypot(20, 20);
 
 /** "a,b,c" 형태의 태그 문자열을 배열로 변환한다. */
 function splitTags(value) {
@@ -20,66 +23,99 @@ function splitTags(value) {
 }
 
 /**
+ * 성향 매칭도(0~100).
+ *
+ * 사용자 좌표와 장소 좌표의 거리를 최대 거리로 정규화한 값이다.
+ * 조건(기간·이동수단) 감점은 여기 섞지 않는다 — 매칭도는 어디까지나
+ * "성향이 얼마나 맞는가"만 나타내야 하기 때문이다.
+ */
+export function computeAffinity(user, placeAxis) {
+  const distance = Math.hypot(user.x - placeAxis.x, user.y - placeAxis.y);
+  const affinity = 100 - (distance / MAX_DISTANCE) * 100;
+  return Math.max(0, Math.min(100, affinity));
+}
+
+/** 감점표 여러 개를 합쳐 태그별 총 감점을 만든다. */
+function collectPenalties(tables) {
+  const merged = {};
+  for (const table of tables) {
+    for (const [tag, points] of Object.entries(table ?? {})) {
+      merged[tag] = (merged[tag] ?? 0) + points;
+    }
+  }
+  return merged;
+}
+
+/**
+ * 사용자가 기울어진 쪽의 성향 태그만 매칭 대상으로 본다.
+ * 예) x가 음수(자연·힐링 쪽)이면 "액티비티" 태그는 매칭으로 치지 않는다.
+ */
+function affinityTagsFor({ x, y }) {
+  return [
+    ...(x < 0 ? AXIS_AFFINITY_TAGS.x.negative : AXIS_AFFINITY_TAGS.x.positive),
+    ...(y < 0 ? AXIS_AFFINITY_TAGS.y.negative : AXIS_AFFINITY_TAGS.y.positive),
+  ];
+}
+
+/**
  * ① 스코어링
  *
- * score = (사용자가 고른 preference_tags 매칭 수 × 2)
- *       - (저촉된 avoid_tags 감점 합)
- *       + (themes[0]과 매칭되면 +0.5)
- *       + (동반 유형 자동 태그와 매칭되면 +1.5)
+ * score = 성향 매칭도(0~100)
+ *       + 동반 유형 자동 태그 가산
+ *       - 조건(동반·기간·이동수단) 기반 avoid_tags 감점
  *
- * avoid_tags는 하드 필터가 아니라 소프트 감점이다. 감점 폭은 동반 유형에 따라 다르고,
- * 세부사항이 "어린 자녀"이면 2배가 된다.
- *
- * 자동 태그(가족→아이와함께, 연인·부부→로맨틱·커플)는 ×2 가중치 대상이 아니라
- * 별도의 고정 가산점이다. 다만 matched_tags 에는 함께 노출한다.
+ * 조건 문항은 X/Y 좌표에 전혀 반영되지 않는다. 오직 이 감점에만 쓰인다.
  */
-export function scorePlace(place, { companion, themes = [], detail = null }) {
+export function scorePlace(place, { axisScores, conditions }) {
+  const { companion, duration, transport } = conditions ?? {};
   const preferenceTags = splitTags(place.preference_tags);
   const avoidTags = splitTags(place.avoid_tags);
 
-  // 사용자가 고른 순서를 그대로 유지한다(첫 번째 선택에 가중치를 주기 위함).
-  const selectedTags = themes.filter((theme) => preferenceTags.includes(theme));
+  const affinity = computeAffinity(axisScores, place.axis);
 
-  // 동반 유형에서 자동으로 따라오는 태그. 사용자가 고른 것 뒤에 붙인다.
+  // 성향 방향과 맞는 태그만 추린다.
+  const wanted = affinityTagsFor(axisScores);
+  const matchedAffinityTags = preferenceTags.filter((tag) =>
+    wanted.includes(tag),
+  );
+
+  // 동반 유형에서 자동으로 따라오는 태그
   const autoTag = COMPANION_AUTO_TAGS[companion] ?? null;
   const autoMatched =
-    autoTag && preferenceTags.includes(autoTag) && !selectedTags.includes(autoTag)
+    autoTag &&
+    preferenceTags.includes(autoTag) &&
+    !matchedAffinityTags.includes(autoTag)
       ? autoTag
       : null;
   const autoBonus = autoMatched ? COMPANION_AUTO_BONUS : 0;
 
   const matchedTags = autoMatched
-    ? [...selectedTags, autoMatched]
-    : selectedTags;
+    ? [...matchedAffinityTags, autoMatched]
+    : matchedAffinityTags;
 
-  const penaltyTable = AVOID_PENALTIES[companion] ?? {};
-  const multiplier = detail === PENALTY_DOUBLING_DETAIL ? 2 : 1;
+  // 조건 기반 감점 (하드 필터가 아니라 소프트 감점)
+  const penaltyTable = collectPenalties([
+    AVOID_PENALTIES[companion],
+    DURATION_PENALTIES[duration],
+    TRANSPORT_PENALTIES[transport],
+  ]);
   const triggeredAvoidTags = avoidTags.filter((tag) => penaltyTable[tag] > 0);
   const penalty = triggeredAvoidTags.reduce(
-    (sum, tag) => sum + penaltyTable[tag] * multiplier,
+    (sum, tag) => sum + penaltyTable[tag],
     0,
   );
-
-  const primaryTheme = themes[0] ?? null;
-  const primaryBonus =
-    primaryTheme && preferenceTags.includes(primaryTheme)
-      ? PRIMARY_THEME_BONUS
-      : 0;
-
-  const score =
-    selectedTags.length * TAG_MATCH_WEIGHT - penalty + primaryBonus + autoBonus;
 
   return {
     place,
     place_id: place.place_id,
-    score,
+    score: affinity + autoBonus - penalty,
+    /** 화면에 보여줄 성향 매칭도 — 감점을 섞지 않은 순수 값 */
+    matchScore: Math.round(affinity),
     matchedTags,
-    selectedTags,
     autoMatchedTag: autoMatched,
+    autoBonus,
     triggeredAvoidTags,
     penalty,
-    primaryBonus,
-    autoBonus,
   };
 }
 

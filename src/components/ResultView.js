@@ -2,30 +2,27 @@
 
 import PlaceCard from "@/components/PlaceCard";
 
-export default function ResultView({ result, preferences, onRestart }) {
-  const summary = [
-    preferences.companion,
-    preferences.themes.join(" · "),
-    preferences.detail,
-  ]
-    .filter(Boolean)
-    .join(" / ");
+export default function ResultView({ result, travelType, onRestart }) {
+  const count = result.recommendations.length;
 
   return (
     <section>
-      <div className="mb-5">
+      <div className="mb-5 text-center">
         <h2 className="display text-2xl sm:text-3xl">
-          아래 {result.recommendations.length}곳 어때요?
+          당신에게 딱 맞는{" "}
+          <span style={{ color: "var(--accent)" }}>여수 여행 BEST {count}</span>
         </h2>
-        <p
-          className="mt-1 text-sm font-medium"
-          style={{ color: "var(--muted)" }}
-        >
-          {summary}
-        </p>
+        {travelType && (
+          <p
+            className="mt-1.5 text-sm font-bold"
+            style={{ color: "var(--muted)" }}
+          >
+            {travelType.name} · {travelType.xBandLabel} / {travelType.yBandLabel}
+          </p>
+        )}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {result.recommendations.map((recommendation, index) => (
           <PlaceCard
             key={recommendation.place_id}
@@ -49,7 +46,7 @@ export default function ResultView({ result, preferences, onRestart }) {
             "--chunk": "var(--accent-strong)",
           }}
         >
-          다시 추천받기
+          다시 검사하기
         </button>
       </div>
     </section>

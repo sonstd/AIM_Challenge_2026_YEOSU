@@ -5,7 +5,8 @@ import HeroArt from "@/components/HeroArt";
 /** 위저드 진입 전 랜딩 화면. 여기서 시작 버튼을 눌러야 1단계로 들어간다. */
 export default function Intro({ onStart }) {
   return (
-    <section className="flex min-h-[78dvh] flex-col items-center justify-center py-6 text-center">
+    // 페이지가 세로 가운데 정렬을 맡으므로 여기서 높이를 강제하지 않는다.
+    <section className="flex flex-col items-center justify-center text-center">
 
       <h1 className="display mt-5 text-[2.6rem] leading-[1.15] sm:text-6xl">
         나에게 딱 맞는
@@ -17,9 +18,9 @@ export default function Intro({ onStart }) {
         className="mt-4 max-w-md text-sm font-['NexonMaplestory'] leading-relaxed sm:text-base"
         style={{ color: "var(--muted)" }}
       >
-        간단한 질문 세 개에만 답하면 AI가 여수 관광지 20곳 중
-        <br className="hidden sm:block" /> 당신에게 맞는 3~5곳을 이유와 함께
-        추천해드려요!
+        간단한 질문에 답하면 AI가 나의 여행 유형을 찾아내고,
+        <br className="hidden sm:block" /> 여수 관광지 20곳 중 딱 맞는 3곳을
+        이유와 함께 추천해드려요!
       </p>
 
       <HeroArt className="animate-float mt-8 h-44 w-44 sm:h-52 sm:w-52" />

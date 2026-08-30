@@ -1,100 +1,84 @@
 /**
  * 대회 제출 규격 및 추천 파이프라인 전반에서 공유하는 상수.
+ *
+ * 설문 문항 자체는 src/config/questions.js, 유형 이름은 src/config/travel-types.js 에 있다.
+ * 여기에는 "점수를 어떻게 매길지"에 대한 값만 둔다.
  */
 
 export const REGION_ID = "YEOSU";
 
-/** 1단계: 동반 유형 (단일 선택) */
-export const COMPANIONS = ["혼자", "친구", "연인·부부", "가족"];
+/** 결과 화면에 노출할 추천 개수. 검증 범위(3~5) 안이어야 한다. */
+export const TARGET_RECOMMENDATIONS = 3;
 
 /**
- * 2단계: 선호 테마 (다중 선택, 2~3개). places.json의 preference_tags 값의 부분집합이다.
- *
- * "아이와함께"·"로맨틱·커플"은 사용자가 직접 고르지 않는다. 1단계 동반 유형에서
- * 자연히 따라오는 성격이라, 대신 COMPANION_AUTO_TAGS 로 자동 가산한다.
- * (places.json의 preference_tags 값 자체는 그대로 둔다.)
- */
-export const THEMES = [
-  "자연·힐링",
-  "액티비티",
-  "사진·인생샷",
-  "야경",
-  "문화·역사",
-  "맛집·미식",
-];
-
-export const MIN_THEMES = 2;
-export const MAX_THEMES = 3;
-
-/** 3단계: 동반 유형에 따라 달라지는 세부 질문 (선택 사항) */
-export const DETAILS_BY_COMPANION = {
-  혼자: {
-    question: "이번 여행의 목적은?",
-    options: ["쉼·리프레시", "사진 촬영", "새로운 경험"],
-  },
-  친구: {
-    question: "몇 명이서?",
-    options: ["둘이서", "여럿이서"],
-  },
-  "연인·부부": {
-    question: "관계는?",
-    options: ["연인", "신혼", "오래된 부부"],
-  },
-  가족: {
-    question: "누구와?",
-    options: ["어린 자녀", "청소년 자녀", "부모님"],
-  },
-};
-
-/**
- * 동반 유형별 avoid_tags 감점표 (소프트 감점, 하드 필터 아님).
+ * 동반 유형별 avoid_tags 감점표. 0~100 매칭 점수에서 빼는 점수다.
  * 혼자·친구는 감점 없음.
  */
 export const AVOID_PENALTIES = {
   혼자: {},
   친구: {},
-  "연인·부부": {
-    노약자비추천: 0.5,
+  연인: {
+    노약자비추천: 3,
   },
   가족: {
-    노약자비추천: 1,
-    이동시간김: 1,
-    장거리도보: 1,
-    고소공포증비추천: 1,
+    노약자비추천: 6,
+    이동시간김: 6,
+    장거리도보: 6,
+    고소공포증비추천: 6,
   },
 };
 
-/** 이 세부사항이 선택되면 위 감점을 2배로 적용한다. */
-export const PENALTY_DOUBLING_DETAIL = "어린 자녀";
+/** 여행 기간이 짧을수록 멀리 나가는 코스를 깎는다. */
+export const DURATION_PENALTIES = {
+  반나절: { 이동시간김: 12, 간조시간대만가능: 4 },
+  당일치기: { 이동시간김: 6 },
+  "1박 2일": {},
+  "2박 3일 이상": {},
+};
 
-/** themes[0](첫 번째로 고른 테마)과 매칭될 때 주는 가산점. */
-export const PRIMARY_THEME_BONUS = 0.5;
+/** 이동 수단이 제한적이면 접근성이 나쁜 곳을 깎는다. */
+export const TRANSPORT_PENALTIES = {
+  "도보 + 대중교통": { 이동시간김: 6, 장거리도보: 3 },
+  자가용: {},
+  렌터카: {},
+  "아직 정하지 않았다": {},
+};
 
 /**
  * 동반 유형에서 자동으로 따라오는 선호 태그.
- * 사용자가 2단계에서 고르지 않아도, 해당 태그를 가진 장소에 가산점을 주고
- * matched_tags 에도 포함시킨다.
+ * 해당 태그를 가진 장소에 가산점을 주고 matched_tags 에도 포함시킨다.
  */
 export const COMPANION_AUTO_TAGS = {
   가족: "아이와함께",
-  "연인·부부": "로맨틱·커플",
+  연인: "로맨틱·커플",
 };
 
-/** COMPANION_AUTO_TAGS 매칭 시 주는 가산점. */
-export const COMPANION_AUTO_BONUS = 1;
+export const COMPANION_AUTO_BONUS = 4;
 
-/** preference_tags 1개 매칭당 가산점. */
-export const TAG_MATCH_WEIGHT = 2;
+/**
+ * matched_tags 를 만들 때 쓰는 축별 성향 태그.
+ * 사용자가 어느 쪽으로 기울었는지에 따라 그쪽 태그만 매칭 대상으로 본다.
+ */
+export const AXIS_AFFINITY_TAGS = {
+  x: {
+    negative: ["자연·힐링"],
+    positive: ["액티비티"],
+  },
+  y: {
+    negative: ["문화·역사"],
+    positive: ["야경", "맛집·미식", "사진·인생샷"],
+  },
+};
+
+/** ② 후보 압축 단계 파라미터 */
+export const CANDIDATE_LIMIT = 8;
+export const MIN_CANDIDATES = 5;
 
 /**
  * 배타 그룹: 성격이 거의 동일해 둘 다 상위에 올리면 추천이 중복으로 보이는 장소들.
  * 그룹 내에서는 점수가 가장 높은 한 곳만 후보로 남긴다.
  */
 export const EXCLUSIVE_GROUPS = [["YEOSU_012", "YEOSU_013"]];
-
-/** ② 후보 압축 단계 파라미터 */
-export const CANDIDATE_LIMIT = 8;
-export const MIN_CANDIDATES = 5;
 
 /** ④ 검증 레이어 파라미터 */
 export const MIN_RECOMMENDATIONS = 3;
