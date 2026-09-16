@@ -164,8 +164,13 @@ export default function Wizard() {
       })()
     : null;
 
-  function chooseCondition(value) {
+  /** 조건 문항도 선택만 기록한다. 넘어가는 건 "다음" 버튼이 맡는다. */
+  function selectCondition(value) {
     setConditions((current) => ({ ...current, [conditionQuestion.id]: value }));
+  }
+
+  function nextCondition() {
+    if (!conditions[conditionQuestion.id]) return;
     if (conditionIndex < CONDITION_QUESTIONS.length - 1) {
       setConditionIndex((i) => i + 1);
     } else {
@@ -173,8 +178,13 @@ export default function Wizard() {
     }
   }
 
-  function chooseAnswer(value) {
+  /** 성향 문항은 선택만 기록한다. 넘어가는 건 "다음" 버튼이 맡는다. */
+  function selectAnswer(value) {
     setAnswers((current) => ({ ...current, [personalityQuestion.slot]: value }));
+  }
+
+  function nextAnswer() {
+    if (answers[personalityQuestion.slot] == null) return;
     if (answerIndex < PERSONALITY_QUESTIONS.length - 1) {
       setAnswerIndex((i) => i + 1);
     } else {
@@ -331,7 +341,7 @@ export default function Wizard() {
             <OptionGrid
               options={conditionQuestion.options}
               selected={conditions[conditionQuestion.id] ?? null}
-              onSelect={chooseCondition}
+              onSelect={selectCondition}
             />
             <div className="mt-5 flex gap-2.5">
               <button
@@ -344,7 +354,7 @@ export default function Wizard() {
               </button>
               <button
                 type="button"
-                onClick={() => chooseCondition(conditions[conditionQuestion.id])}
+                onClick={nextCondition}
                 disabled={!conditions[conditionQuestion.id]}
                 className="chunky flex-1 rounded-xl px-4 py-3.5 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-45"
                 style={PRIMARY_BUTTON}
@@ -368,7 +378,7 @@ export default function Wizard() {
             <PersonalityStep
               question={personalityQuestion}
               value={answers[personalityQuestion.slot] ?? null}
-              onSelect={chooseAnswer}
+              onSelect={selectAnswer}
             />
             <div className="mt-5 flex gap-2.5">
               <button
@@ -381,9 +391,7 @@ export default function Wizard() {
               </button>
               <button
                 type="button"
-                onClick={() =>
-                  chooseAnswer(answers[personalityQuestion.slot])
-                }
+                onClick={nextAnswer}
                 disabled={answers[personalityQuestion.slot] == null}
                 className="chunky flex-1 rounded-xl px-4 py-3.5 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-45"
                 style={PRIMARY_BUTTON}

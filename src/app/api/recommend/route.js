@@ -86,6 +86,13 @@ export async function POST(request) {
   const allPlaces = await getAllPlaces();
   const whitelist = new Set(allPlaces.map((place) => place.place_id));
   const candidateIds = new Set(candidates.map((entry) => entry.place_id));
+  // 검증 [7] 원문 복사 경고용. 1~3문장이 각각 evidence_text_1~3 과 대응한다.
+  const evidenceById = new Map(
+    allPlaces.map((place) => [
+      place.place_id,
+      [place.evidence_text_1, place.evidence_text_2, place.evidence_text_3],
+    ]),
+  );
 
   // ③ Agent 호출 + ④ 검증. 실패하면 문제점을 되먹여 최대 3회까지 재호출한다.
   let items = [];
@@ -112,7 +119,11 @@ export async function POST(request) {
       continue;
     }
 
-    const result = validateAgentResponse(payload, { whitelist, candidateIds });
+    const result = validateAgentResponse(payload, {
+      whitelist,
+      candidateIds,
+      evidenceById,
+    });
     if (result.ok) {
       items = result.items;
       issues = [];
@@ -137,7 +148,7 @@ export async function POST(request) {
     );
     const result = validateAgentResponse(
       { recommendations: fallback },
-      { whitelist, candidateIds },
+      { whitelist, candidateIds, evidenceById },
     );
     if (result.ok) {
       console.warn(

@@ -7,7 +7,10 @@
 
 export const REGION_ID = "YEOSU";
 
-/** 결과 화면에 노출할 추천 개수. 검증 범위(3~5) 안이어야 한다. */
+/**
+ * 추천 개수. 서비스 사양이 "맞춤 추천 BEST 3"으로 고정이므로
+ * 검증 [3]도 정확히 이 개수만 통과시킨다. (CLAUDE.md §3 [3], §5)
+ */
 export const TARGET_RECOMMENDATIONS = 3;
 
 /**
@@ -91,9 +94,20 @@ export const MIN_CANDIDATES = 5;
  */
 export const EXCLUSIVE_GROUPS = [["YEOSU_012", "YEOSU_013"]];
 
-/** ④ 검증 레이어 파라미터 */
-export const MIN_RECOMMENDATIONS = 3;
-export const MAX_RECOMMENDATIONS = 5;
+/**
+ * ④ 검증 [7] 원문 복사 경고 기준 (CLAUDE.md §3).
+ * 생성 문장과 대응 evidence_text의 문자 일치율이 이 값 이상이면 경고만 남긴다.
+ * 자동 재생성까지는 하지 않고 제출 전 육안 확인 대상으로 삼는다.
+ */
+export const COPY_WARNING_THRESHOLD = 0.8;
+
+/**
+ * ④ 검증 레이어 파라미터
+ * 추천 수는 하한·상한 모두 TARGET_RECOMMENDATIONS(3)에 묶는다. 예전에는 3~5를 허용해서
+ * Agent가 4~5곳을 돌려줘도 통과했다.
+ */
+export const MIN_RECOMMENDATIONS = TARGET_RECOMMENDATIONS;
+export const MAX_RECOMMENDATIONS = TARGET_RECOMMENDATIONS;
 export const MIN_SENTENCES = 2;
 export const MAX_SENTENCES = 5;
 export const MAX_AGENT_ATTEMPTS = 3;
