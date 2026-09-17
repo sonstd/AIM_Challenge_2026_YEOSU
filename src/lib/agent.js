@@ -2,8 +2,6 @@ import { GoogleGenAI, Type } from "@google/genai";
 
 import { GENERIC_CATEGORY_TERMS } from "@/config/category-terms";
 
-// [DEBUG] 제출 전 삭제 — src/lib/debug-log.js 상단 안내 참고
-import { logAgentRequest, logAgentResponse } from "@/lib/debug-log";
 import { hasDecimalNumber, splitSentences } from "@/lib/validate";
 
 /**
@@ -193,7 +191,43 @@ export function buildCandidatePayload(candidates) {
   }));
 }
 
-function buildPrompt({ candidates, preferences, previousIssues }) {
+/**
+ * 원문 복사로 거부된 문장을 재호출 프롬프트용 블록으로 만든다. (CLAUDE.md §3 [7])
+ * keep_terms 는 그 장소의 고정 표현 전체를 보여 준다. 이 표현들은 바꾸지 않고
+ * 나머지 어휘·표현·어순에서 변화를 만들라는 뜻이다.
+ */
+function buildCopyRejectionBlock(copyRejections, candidates) {
+  const placeById = new Map(
+    candidates.map(({ place }) => [place.place_id, place]),
+  );
+  const lines = [
+    "이전 시도가 아래 문장에서 원문 복사로 거부되었다. 다시 작성하라.",
+  ];
+
+  for (const { placeId, order, evidence, sentence } of copyRejections) {
+    const place = placeById.get(placeId);
+    const keepTerms = place ? findKeepTerms(place) : [];
+    const keepClause = keepTerms.length
+      ? `keep_terms(${keepTerms.join(", ")})을 제외하고, `
+      : "";
+    lines.push(
+      "",
+      `[${placeId} · ${order}문장]`,
+      `  원문 : ${evidence}`,
+      `  거부 : ${sentence}`,
+      `  문제 : evidence_text${order}와 동일한 어휘, 표현이 동일한 어순으로 사용되었다.`,
+      `        ${keepClause}어휘, 표현, 어순 중 적어도 한 가지는 반드시 바꿔서 다시 작성하라.`,
+    );
+  }
+  return lines;
+}
+
+function buildPrompt({
+  candidates,
+  preferences,
+  previousIssues,
+  copyRejections = [],
+}) {
   const { conditions, travelType } = preferences;
   const lines = [
     "## 사용자 여행 유형",
@@ -219,6 +253,14 @@ function buildPrompt({ candidates, preferences, previousIssues }) {
     );
   }
 
+  if (copyRejections.length) {
+    lines.push(
+      "",
+      "## 원문 복사로 거부된 문장",
+      ...buildCopyRejectionBlock(copyRejections, candidates),
+    );
+  }
+
   return lines.join("\n");
 }
 
@@ -239,18 +281,13 @@ export async function requestRecommendations({
   candidates,
   preferences,
   previousIssues = [],
-  attempt = 1,
-  maxAttempts = 1,
+  copyRejections = [],
 }) {
-  const prompt = buildPrompt({ candidates, preferences, previousIssues });
-
-  // [DEBUG] 제출 전 삭제
-  logAgentRequest({
-    attempt,
-    maxAttempts,
-    model: MODEL,
-    systemInstruction: SYSTEM_INSTRUCTION,
-    prompt,
+  const prompt = buildPrompt({
+    candidates,
+    preferences,
+    previousIssues,
+    copyRejections,
   });
 
   const response = await getClient().models.generateContent({
@@ -264,12 +301,7 @@ export async function requestRecommendations({
     },
   });
 
-  const parsed = parseJson(response.text);
-
-  // [DEBUG] 제출 전 삭제
-  logAgentResponse({ attempt, maxAttempts, raw: response.text, parsed });
-
-  return parsed;
+  return parseJson(response.text);
 }
 
 /** 소수점 수치가 없는 첫 문장을 고른다. 없으면 null. */

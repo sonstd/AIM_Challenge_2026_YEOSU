@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "여수 관광지 추천",
   description:
-    "여행 취향을 고르면 AI Agent가 여수 관광지 20곳 중 3~5곳을 추천합니다.",
+    "여행 취향을 고르면 AI Agent가 여수 관광지 20곳 중 3곳을 추천합니다.",
 };
 
 export const viewport = {

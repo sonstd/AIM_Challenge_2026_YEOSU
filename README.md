@@ -6,11 +6,16 @@
 
 ## 실행
 
+Node.js 20.9 이상이 필요합니다.
+
 ```bash
-npm run dev
+npm install
+npm run build
+npm run start
 ```
 
-http://localhost:3000 에서 확인합니다.
+http://localhost:3000 에서 확인합니다. 개발 모드는 `npm run dev`입니다.
+자세한 API 입력·출력·테스트 방법은 `AI_Factory_인터페이스_경로_및_구동방법_가이드.txt`를 참고하세요.
 
 ## API 키 설정
 
@@ -18,7 +23,7 @@ Agent 호출은 **서버사이드에서만** 일어납니다.
 
 ```bash
 # .env.local
-OPENAI_API_KEY=발급받은_키
+GEMINI_API_KEY=발급받은_키
 ```
 
 키가 없거나 네트워크가 막혀 Agent에 **닿지 못하면**, 서버는 evidence_text_1~3을
@@ -71,19 +76,13 @@ Y = Y1 + Y2 + Y3 + Y4     (−10 ≤ Y ≤ 10)  한적·로컬 ↔ 핫플·데�
 | `src/lib/places.js` | **데이터 접근 레이어.** `getAllPlaces()` / `getPlaceById(id)` |
 | `src/lib/personality.js` | X/Y 계산, 구간·유형·강도 판정 |
 | `src/lib/scoring.js` | ① 매칭도·감점 스코어링 ② 후보 압축 |
-| `src/lib/agent.js` | ③ OpenAI `gpt-4o` 호출 (서버 전용, 구조화 출력) |
+| `src/lib/agent.js` | ③ Gemini 호출 (서버 전용) |
 | `src/lib/validate.js` | ④ 검증 레이어 |
 | `src/app/api/recommend/route.js` | 파이프라인 조립 + ⑤ 응답 조립 |
 
 **컴포넌트와 API 라우트는 JSON을 직접 import하지 않습니다.** 반드시
 `src/lib/places.js`를 거칩니다. 좌표(`place-axis.json`)도 이 레이어에서 합쳐 주므로
 호출부는 파일이 둘로 나뉜 걸 알 필요가 없습니다.
-
-`places.json`은 원본 CSV에서 생성했고 재생성은 결정적입니다:
-
-```bash
-node scripts/generate-places.mjs
-```
 
 ## 추천 파이프라인
 
@@ -98,8 +97,8 @@ POST /api/recommend
 ① 스코어링   매칭도(0~100) + 동반 자동 태그 가산 − 조건 감점
 ② 후보 압축   상위 8곳 (최소 5곳 보장), 배타 그룹은 점수 높은 쪽만
 ③ Agent      후보의 evidence_text_1~5 기반으로 정확히 3곳 선정, 이유는 3문장
-④ 검증        화이트리스트 / 중복 / 개수(정확히 3) / 문장수(2~5) / 소수점 → 실패 시 최대 3회 재호출
-             인용부호는 제거 후 통과, 원문 복사는 경고 로그 (CLAUDE.md §3 [6][7])
+④ 검증        화이트리스트 / 중복 / 개수(정확히 3) / 문장수(2~5) / 소수점 / 원문 복사 → 실패 시 최대 3회 재호출
+             인용부호는 제거 후 통과. 원문 복사는 거부된 문장을 다음 프롬프트에 실어 재작성 요청 (CLAUDE.md §3 [6][7])
 ⑤ 응답 조립   getPlaceById()로 place_name·image_prompt·images 결합
 ```
 
@@ -166,5 +165,5 @@ X-Recommend-Source: agent | fallback
 
 ## 이미지
 
-`public/images/places/{place_id}_01.png` ~ `_03.png` 경로를 기대합니다.
+`public/images/places/{place_id}_01.png` 경로를 사용합니다(장소당 1장).
 파일이 없으면 카드가 자동으로 "이미지 준비 중" 플레이스홀더로 대체됩니다.

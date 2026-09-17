@@ -78,20 +78,27 @@ export function copyRatio(sentence, evidence) {
  * [4] 문장 수 2~5      → 실패 시 재호출
  * [5] 소수점 수치      → 실패 시 재호출 (경고로 넘기지 않는다)
  * [6] 인용부호         → 제거 후 통과
- * [7] 원문 복사        → 경고 로그
+ * [7] 원문 복사        → 재호출 (거부된 문장을 copyRejections 로 돌려준다)
  *
  * @param {unknown} payload Agent가 반환한 JSON
  * @param {{
  *   whitelist: Set<string>,
  *   candidateIds?: Set<string>,
  *   evidenceById?: Map<string, string[]>,
+ *   checkCopy?: boolean,
  * }} options evidenceById 는 place_id → [evidence_text_1, 2, 3]
+ *   checkCopy 가 false 면 [7]을 건너뛴다. evidence를 그대로 조립하는 대체 응답용이다.
+ *
+ * 반환값의 copyRejections 는 재호출 프롬프트에 그대로 싣기 위한 구조화된 목록이다.
+ * 원문 복사로 걸린 항목은 items 에서 빼지 않는다. 장소 자체는 유효하므로,
+ * 재호출을 다 써도 복사가 남으면 가장 나은 결과로 응답할 수 있게 하기 위함이다.
  */
 export function validateAgentResponse(
   payload,
-  { whitelist, candidateIds, evidenceById },
+  { whitelist, candidateIds, evidenceById, checkCopy = true },
 ) {
   const issues = [];
+  const copyRejections = [];
   const items = [];
   const seen = new Set();
 
@@ -104,6 +111,7 @@ export function validateAgentResponse(
       ok: false,
       items,
       issues: ["응답에 recommendations 배열이 없습니다."],
+      copyRejections,
     };
   }
 
@@ -153,8 +161,8 @@ export function validateAgentResponse(
       continue;
     }
 
-    // [7] 원문 복사 — 경고만 남기고 통과시킨다.
-    const evidences = evidenceById?.get(placeId);
+    // [7] 원문 복사 — 재호출 대상. 거부된 문장을 모아 다음 프롬프트에 싣는다.
+    const evidences = checkCopy ? evidenceById?.get(placeId) : null;
     if (evidences) {
       sentences.forEach((sentence, order) => {
         const source = evidences[order];
@@ -163,8 +171,15 @@ export function validateAgentResponse(
         if (ratio >= COPY_WARNING_THRESHOLD) {
           console.warn(
             `[validate] ${placeId}: ${order + 1}문장이 evidence_text_${order + 1} 와 ` +
-              `${Math.round(ratio * 100)}% 일치합니다(원문 복사 의심) — ${sentence}`,
+              `${Math.round(ratio * 100)}% 일치합니다(원문 복사) — ${sentence}`,
           );
+          copyRejections.push({
+            placeId,
+            order: order + 1,
+            evidence: source,
+            sentence: `${sentence}.`,
+            ratio,
+          });
         }
       });
     }
@@ -189,5 +204,10 @@ export function validateAgentResponse(
     );
   }
 
-  return { ok: issues.length === 0, items, issues };
+  return {
+    ok: issues.length === 0 && copyRejections.length === 0,
+    items,
+    issues,
+    copyRejections,
+  };
 }

@@ -3,8 +3,6 @@ import {
   buildFallbackRecommendations,
   requestRecommendations,
 } from "@/lib/agent";
-// [DEBUG] 제출 전 삭제 — src/lib/debug-log.js 상단 안내 참고
-import { logFinalResponse } from "@/lib/debug-log";
 import {
   MAX_AGENT_ATTEMPTS,
   MAX_RECOMMENDATIONS,
@@ -86,7 +84,7 @@ export async function POST(request) {
   const allPlaces = await getAllPlaces();
   const whitelist = new Set(allPlaces.map((place) => place.place_id));
   const candidateIds = new Set(candidates.map((entry) => entry.place_id));
-  // 검증 [7] 원문 복사 경고용. 1~3문장이 각각 evidence_text_1~3 과 대응한다.
+  // 검증 [7] 원문 복사 판정용. 1~3문장이 각각 evidence_text_1~3 과 대응한다.
   const evidenceById = new Map(
     allPlaces.map((place) => [
       place.place_id,
@@ -97,6 +95,10 @@ export async function POST(request) {
   // ③ Agent 호출 + ④ 검증. 실패하면 문제점을 되먹여 최대 3회까지 재호출한다.
   let items = [];
   let issues = [];
+  // 원문 복사로 거부된 문장. 다음 호출 프롬프트에 원문·거부 문장을 그대로 싣는다.
+  let copyRejections = [];
+  // 3회 모두 실패했을 때 고를 "가장 나은 시도"의 복사 거부 건수
+  let bestCopyCount = Infinity;
   let reachedModel = false;
   let source = "agent";
 
@@ -107,8 +109,7 @@ export async function POST(request) {
         candidates,
         preferences,
         previousIssues: issues,
-        attempt,
-        maxAttempts: MAX_AGENT_ATTEMPTS,
+        copyRejections,
       });
       reachedModel = true;
     } catch (err) {
@@ -127,16 +128,31 @@ export async function POST(request) {
     if (result.ok) {
       items = result.items;
       issues = [];
+      copyRejections = [];
       break;
     }
 
     console.warn(
       `[recommend] 검증 실패 (${attempt}/${MAX_AGENT_ATTEMPTS}):`,
-      result.issues.join(" / "),
+      [
+        ...result.issues,
+        ...result.copyRejections.map(
+          (r) => `${r.placeId} ${r.order}문장 원문 복사 ${Math.round(r.ratio * 100)}%`,
+        ),
+      ].join(" / "),
     );
     issues = result.issues;
+    copyRejections = result.copyRejections;
     // 3회 모두 실패하면 통과한 항목만으로 응답하기 위해 가장 성적이 좋은 시도를 남긴다.
-    if (result.items.length > items.length) items = result.items;
+    // 항목 수가 많은 쪽, 같으면 원문 복사 거부가 적은 쪽을 고른다.
+    const copyCount = result.copyRejections.length;
+    if (
+      result.items.length > items.length ||
+      (result.items.length === items.length && copyCount < bestCopyCount)
+    ) {
+      items = result.items;
+      bestCopyCount = copyCount;
+    }
   }
 
   // 모델에 아예 닿지 못한 경우(키 미설정·네트워크 차단)에만 결정적 대체 경로를 쓴다.
@@ -146,9 +162,10 @@ export async function POST(request) {
       candidates,
       TARGET_RECOMMENDATIONS,
     );
+    // 대체 응답은 evidence를 그대로 조립하는 방식이라 원문 복사 검사([7])는 적용하지 않는다.
     const result = validateAgentResponse(
       { recommendations: fallback },
-      { whitelist, candidateIds, evidenceById },
+      { whitelist, candidateIds, evidenceById, checkCopy: false },
     );
     if (result.ok) {
       console.warn(
@@ -163,7 +180,12 @@ export async function POST(request) {
     return Response.json(
       {
         error: "추천을 생성하지 못했습니다. 잠시 후 다시 시도해 주세요.",
-        detail: issues,
+        detail: [
+          ...issues,
+          ...copyRejections.map(
+            (r) => `${r.placeId} ${r.order}문장 원문 복사 ${Math.round(r.ratio * 100)}%`,
+          ),
+        ],
       },
       { status: 500 },
     );
@@ -204,9 +226,6 @@ export async function POST(request) {
   );
 
   const responseBody = { region_id: REGION_ID, recommendations };
-
-  // [DEBUG] 제출 전 삭제
-  logFinalResponse({ source, body: responseBody });
 
   return Response.json(responseBody, {
     headers: {
