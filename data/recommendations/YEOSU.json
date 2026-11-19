@@ -1,0 +1,68 @@
+{
+  "region_id": "YEOSU",
+  "recommendations": [
+    {
+      "place_id": "YEOSU_007",
+      "place_name": "향일암",
+      "recommend_reason": "해를 향한 암자라는 이름을 지닌 일출 명소인 향일암은 돌산도 남쪽 금오산 바위 벼랑에 들어선 해수관음 기도 도량이랑께요. 해 떠오르는 순간 암자 밑으로 남해 수평선이 트이며 바위 틈 석문을 통과해 다다르면 장엄한 감동을 선사하지라. 바위 석문 통과 체험을 즐기거나 남해 조망을 누리면서 암자 풍경을 사진으로 남기기에 딱 좋아라우.",
+      "matched_tags": [
+        "자연·힐링",
+        "사진·인생샷"
+      ],
+      "image_prompt": "yeosu_hyangiram2, high-angle view of a stone-paved temple terrace, Korean temple hall with red pillars upper left, stone turtle statue bottom center, stone lantern on the right, white stone railing, leafless brown trees, pale blue sky, golden hour, late autumn",
+      "images": [
+        "/images/places/7.png"
+      ]
+    },
+    {
+      "place_id": "YEOSU_001",
+      "place_name": "오동도",
+      "recommend_reason": "오동도는 등대랑 3천여 그루 동백나무, 대나무 숲길을 지니고 방파제 산책로로 육지와 만나는 동백섬이지라. 붉은 동백꽃 섬을 물들이는 한겨울부터 봄 계절에는 바다의 꽃섬이라는 명성에 어울리는 모습을 보여 준당께요. 방파제 걸어 보기랑 등대 전망대 조망, 동백열차 탑승을 소소하게 즐겨 보기에도 괜찮구만요.",
+      "matched_tags": [
+        "자연·힐링",
+        "사진·인생샷"
+      ],
+      "image_prompt": "yeosu_odongdo, high-angle aerial view of a small forested island with gray rocky cliffs, white lighthouse, long white breakwater to the right, turquoise sea, coastal city and hills behind, clear daytime, sunlight from left, teal and dark green tones",
+      "images": [
+        "/images/places/1.png"
+      ]
+    },
+    {
+      "place_id": "YEOSU_019",
+      "place_name": "장도",
+      "recommend_reason": "보행교로 걸어 들어가는 전시와 창작 공간인 장도는 웅천 앞바다의 작은 섬을 예술 섬으로 조성한 예울마루 터전이지라. 물때에 따라 잠기는 보행교를 지나 도달하는 잔디 언덕이랑 전시관이 예술 산책 특유의 여백을 안겨 준당께요. 장도전시관을 감상하고 잔디 언덕 산책을 즐기며 해 질 녘 일몰을 바라보기에 딱 좋아라우.",
+      "matched_tags": [
+        "자연·힐링"
+      ],
+      "image_prompt": "yeosu_jangdo, concrete causeway with white railings from bottom center bending left to a small island with pine trees and brown hillside, glassy calm blue sea reflecting the island, clear hazy pale blue sky, midday backlight from top center, eye-level wide-angle one-point perspective, cool tones",
+      "images": [
+        "/images/places/19.png"
+      ]
+    },
+    {
+      "place_id": "YEOSU_006",
+      "place_name": "돌산대교",
+      "recommend_reason": "돌산대교는 여수 시내와 돌산도를 연결하는 450m 사장교로 야간에 조명이 변하며 여수 야경의 상징이 된 곳이라우. 부챗살 케이블이 조명을 받아 바다 위에 빛의 부채를 펼쳐 낸 듯한 밤 풍경을 조성하지라. 장군도나 돌산공원 인근에서 야경을 촬영하거나 다리 아래에서 유람선을 탑승하기에 참 좋당께요.",
+      "matched_tags": [
+        "야경",
+        "사진·인생샷"
+      ],
+      "image_prompt": "yeosu_dolsandaegyo, cable-stayed bridge over teal sea, tall white pylon with red stripe left of center, long blue deck, fan-shaped white cables, cloudless deep blue sky, sunny daytime, sandy beach bottom left, white ferries on far shore, low angle wide view from waterline",
+      "images": [
+        "/images/places/6.png"
+      ]
+    },
+    {
+      "place_id": "YEOSU_014",
+      "place_name": "고소동 벽화마을",
+      "recommend_reason": "고소동 벽화마을은 진남관 뒤편 언덕에 만들어진 1004 벽화골목으로 오포대랑 고소대에 서면 여수 앞바다가 내려다보이지라. 경사진 골목 벽화 틈으로 바다와 돌산대교가 시야에 들어와 걷는 동안 풍경과 그림이 번갈아 눈에 들어온당께요. 벽화 골목 탐방을 즐기고 언덕 전망 카페를 이용하며 도보 여행을 즐기기에 참 좋아라우.",
+      "matched_tags": [
+        "사진·인생샷"
+      ],
+      "image_prompt": "yeosu_mural_village, white retaining wall with flat red, yellow and light blue house-shaped murals along the right side of a sloping asphalt road curving left, receding to left-center, apartments above, low-angle wide-angle view, sunny midday, deep blue cloudless sky",
+      "images": [
+        "/images/places/14.png"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "conditions": {
+    "companion": "연인",
+    "duration": "1박 2일"
+  },
+  "answers": {
+    "X1": -2.5, "Y1": 5,
+    "X2": -5,   "Y2": 2.5
+  }
+}

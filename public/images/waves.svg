@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" preserveAspectRatio="none">
+  <!--
+    가로로 이어 붙여도 이음매가 보이지 않는 물결 띠.
+    각 파도는 300px짜리 마루/골을 4번 반복해 x=1200에서 시작 높이와 기울기가 같아진다.
+  -->
+  <path
+    d="M0 110 q150 -46 300 0 t300 0 t300 0 t300 0 V300 H0 Z"
+    fill="#7cc9e4"
+    opacity="0.55"
+  />
+  <path
+    d="M0 158 q150 -38 300 0 t300 0 t300 0 t300 0 V300 H0 Z"
+    fill="#ffffff"
+    opacity="0.32"
+  />
+  <path
+    d="M0 205 q150 -30 300 0 t300 0 t300 0 t300 0 V300 H0 Z"
+    fill="#ffffff"
+    opacity="0.6"
+  />
+  <path
+    d="M0 246 q150 -22 300 0 t300 0 t300 0 t300 0 V300 H0 Z"
+    fill="#ffffff"
+    opacity="0.85"
+  />
+</svg>

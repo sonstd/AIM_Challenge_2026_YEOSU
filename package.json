@@ -1,0 +1,28 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs dev",
+    "start": "node scripts/serve.mjs start",
+    "dev:web": "next dev",
+    "start:web": "next start",
+    "region": "node scripts/region-server.mjs",
+    "build": "next build",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@google/genai": "^2.18.0",
+    "next": "16.3.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.2",
+    "tailwindcss": "^4.3.3"
+  }
+}
